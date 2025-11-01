@@ -184,6 +184,10 @@ export class BESMActor extends Actor {
           name: String((s && s.name) ?? ""),
           bonus: Number((s && s.bonus) ?? 0) || 0
         }));
+        // Debug: log specialization state for each skill
+        if (skill.specializations.length) {
+          console.log(`[BESM DEBUG] prepareDerivedData: skill ${skillId} specializations`, JSON.stringify(skill.specializations));
+        }
         // Total includes rank + ability mod + race/feat + misc
         skill.total = (skill.rank || 0) + abilityMod + (skill.raceFeat || 0) + (skill.misc || 0);
       }
