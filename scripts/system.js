@@ -414,12 +414,21 @@ class BESMActorSheet extends ActorSheet {
       ev.preventDefault();
       const $target = $(ev.currentTarget);
       let key = ev.currentTarget?.dataset?.skillKey;
+      console.log('[BESM DEBUG] .skill-spec-add clicked', { 
+        datasetKey: ev.currentTarget?.dataset?.skillKey,
+        datasetAll: ev.currentTarget?.dataset,
+        attributes: Array.from(ev.currentTarget?.attributes || []).map(a => `${a.name}=${a.value}`).join(', ')
+      });
       if (!key) {
         const $drawerRow = $target.closest('tr.skill-spec-row');
         const $skillRow = $drawerRow.prev('tr.skill-row');
         key = ($drawerRow.data('skillKey')) || ($skillRow.data('skillKey'));
+        console.log('[BESM DEBUG] .skill-spec-add fallback lookup', { 
+          drawerRowKey: $drawerRow.data('skillKey'),
+          skillRowKey: $skillRow.data('skillKey')
+        });
       }
-      console.log('[BESM DEBUG] .skill-spec-add clicked', { key });
+      console.log('[BESM DEBUG] .skill-spec-add final key', { key });
       if (!key) return;
       const k = String(key);
       const skill = this.actor.system?.skills?.[k] ?? {};
