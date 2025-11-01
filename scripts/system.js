@@ -17,6 +17,21 @@ Hooks.once("init", async function() {
     decimals: 0
   };
 
+  // Configure Actor type labels
+  CONFIG.Actor.typeLabels = {
+    character: "Character",
+    npc: "NPC"
+  };
+
+  // Configure Item type labels
+  CONFIG.Item.typeLabels = {
+    power: "Power",
+    attribute: "Attribute",
+    defect: "Defect",
+    skill: "Skill",
+    equipment: "Equipment"
+  };
+
   // Create a namespace within the game object
   game.besm = {
     BESMActor,
@@ -738,3 +753,16 @@ class BESMItemSheet extends ItemSheet {
     }
   }
 }
+
+/*  Actor Creation Hook                         */
+/************************************************/
+
+// Set sensible token bar defaults when a new Actor is created
+Hooks.on("createActor", async (actor) => {
+  if (actor.type !== "character") return;
+  await actor.update({
+    "prototypeToken.bar1.attribute": "health",
+    "prototypeToken.bar2.attribute": "energy"
+  });
+});
+
