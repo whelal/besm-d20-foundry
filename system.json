@@ -36,10 +36,6 @@
   },
   "packs": [],
   "initiative": "1d20 + @abilities.dex.mod",
-  "grid": {
-    "distance": 5,
-    "units": "ft"
-  },
   "primaryTokenAttribute": "health",
   "secondaryTokenAttribute": "energy",
   "socket": true,
