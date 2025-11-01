@@ -5,8 +5,7 @@
   "version": "0.0.1",
   "compatibility": {
     "minimum": "13",
-    "verified": "13.330",
-    "maximum": "13"
+    "verified": "13.330"
   },
   "manifest": "https://raw.githubusercontent.com/whelal/besm-d20-foundry/main/system.json",
   "download": "https://github.com/whelal/besm-d20-foundry/archive/main.zip",
