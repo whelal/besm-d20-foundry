@@ -260,8 +260,7 @@ class BESMActorSheet extends ActorSheet {
       width: 720,
       height: 680,
       tabs: [{ navSelector: ".tabs", contentSelector: ".content", initial: "main" }],
-      dragDrop: [{ dragSelector: ".item-list .item", dropSelector: null }],
-      submitOnChange: true
+      dragDrop: [{ dragSelector: ".item-list .item", dropSelector: null }]
     });
   }
 
@@ -463,6 +462,15 @@ class BESMActorSheet extends ActorSheet {
 
     // Persist specialization Bonus on change (commit on blur to avoid partial numbers)
     html.find('.spec-bonus').on('change', async ev => {
+      const el = ev.currentTarget;
+      const path = el.name;
+      if (!path) return;
+      const value = Number(el.value);
+      await this.actor.update({ [path]: isNaN(value) ? 0 : value });
+    });
+
+    // Persist skill fields on blur (rank, raceFeat, misc)
+    html.find('input[name*="system.skills"][name*=".rank"], input[name*="system.skills"][name*=".raceFeat"], input[name*="system.skills"][name*=".misc"]').on('blur', async ev => {
       const el = ev.currentTarget;
       const path = el.name;
       if (!path) return;

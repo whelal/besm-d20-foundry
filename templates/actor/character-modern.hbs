@@ -498,7 +498,7 @@
             <td class="skill-roll"><a class="rollable" data-roll="1d20+{{skill.total}}" data-label="{{label}} Check"><i class="fas fa-dice-d20"></i></a></td>
           </tr>
           {{/with}}
-          <tr class="skill-spec-row" data-skill-key="{{key}}">
+          <tr class="skill-spec-row" data-skill-key="{{../key}}">
             <td colspan="8">
               <div class="skill-specs pill-list">
                 {{#with (lookup ../system.skills key) as |s|}}
