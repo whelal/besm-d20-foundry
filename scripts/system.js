@@ -273,8 +273,19 @@ class BESMActorSheet extends ActorSheet {
   }
 
   /** @override */
+  render(force = false, options = {}) {
+    console.log('[BESM DEBUG] BESMActorSheet.render() called', { force, renderSelf: options.renderSelf });
+    const stack = new Error().stack;
+    console.log('[BESM DEBUG] Render stack trace:', stack.split('\n').slice(1, 5).join('\n'));
+    return super.render(force, options);
+  }
+
+  /** @override */
   async getData() {
     const context = super.getData();
+    
+    // Debug: log when sheet data is being retrieved
+    console.log('[BESM DEBUG] BESMActorSheet.getData() called');
     
     // Add the actor's data to context for easier access
     context.system = this.actor.system;
@@ -452,8 +463,10 @@ class BESMActorSheet extends ActorSheet {
       const path = el.name;
       if (!path) return;
       const value = String(el.value ?? '');
+      console.log('[BESM DEBUG] spec-name input:', { path, value, drawer: $(el).closest('.skill-spec-row').hasClass('open') });
       // Update without re-rendering to keep drawer state
       await this.actor.update({ [path]: value }, { render: false });
+      console.log('[BESM DEBUG] spec-name update complete, drawer still open?', $(el).closest('.skill-spec-row').hasClass('open'));
     });
 
     // Persist specialization Bonus on change (commit on blur to avoid partial numbers)
@@ -462,8 +475,10 @@ class BESMActorSheet extends ActorSheet {
       const path = el.name;
       if (!path) return;
       const value = Number(el.value);
+      console.log('[BESM DEBUG] spec-bonus change:', { path, value, drawer: $(el).closest('.skill-spec-row').hasClass('open') });
       // Update without re-rendering to keep drawer state
       await this.actor.update({ [path]: isNaN(value) ? 0 : value }, { render: false });
+      console.log('[BESM DEBUG] spec-bonus update complete, drawer still open?', $(el).closest('.skill-spec-row').hasClass('open'));
     });
 
     // Persist skill fields on blur (rank, raceFeat, misc)
