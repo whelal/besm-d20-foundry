@@ -12,7 +12,6 @@ export class BESMActor extends Actor {
   _onUpdate(data, options, userId) {
     // If render: false was explicitly set, skip the parent's render behavior
     if (options.render === false) {
-      console.log('[BESM DEBUG] _onUpdate with render:false, skipping auto-render');
       // Call prepareDerivedData and other update logic without rendering sheets
       this.prepareData();
       // Emit any necessary hooks without rendering
@@ -20,7 +19,6 @@ export class BESMActor extends Actor {
       return;
     }
     // Otherwise use normal behavior which will render
-    console.log('[BESM DEBUG] _onUpdate with normal render behavior');
     super._onUpdate(data, options, userId);
   }
 
@@ -186,10 +184,6 @@ export class BESMActor extends Actor {
           name: String((s && s.name) ?? ""),
           bonus: Number((s && s.bonus) ?? 0) || 0
         }));
-        // Debug: log specialization state for each skill
-        if (skill.specializations.length) {
-          console.log(`[BESM DEBUG] prepareDerivedData: skill ${skillId} specializations`, JSON.stringify(skill.specializations));
-        }
         // Total includes rank + ability mod + race/feat + misc
         skill.total = (skill.rank || 0) + abilityMod + (skill.raceFeat || 0) + (skill.misc || 0);
       }

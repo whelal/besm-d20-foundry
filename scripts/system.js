@@ -273,18 +273,12 @@ class BESMActorSheet extends ActorSheet {
 
   /** @override */
   render(force = false, options = {}) {
-    console.log('[BESM DEBUG] BESMActorSheet.render() called', { force, renderSelf: options.renderSelf });
-    const stack = new Error().stack;
-    console.log('[BESM DEBUG] Render stack trace:', stack.split('\n').slice(1, 5).join('\n'));
     return super.render(force, options);
   }
 
   /** @override */
   async getData() {
     const context = super.getData();
-    
-    // Debug: log when sheet data is being retrieved
-    console.log('[BESM DEBUG] BESMActorSheet.getData() called');
     
     // Add the actor's data to context for easier access
     context.system = this.actor.system;
@@ -414,21 +408,11 @@ class BESMActorSheet extends ActorSheet {
       ev.preventDefault();
       const $target = $(ev.currentTarget);
       let key = ev.currentTarget?.dataset?.skillKey;
-      console.log('[BESM DEBUG] .skill-spec-add clicked', { 
-        datasetKey: ev.currentTarget?.dataset?.skillKey,
-        datasetAll: ev.currentTarget?.dataset,
-        attributes: Array.from(ev.currentTarget?.attributes || []).map(a => `${a.name}=${a.value}`).join(', ')
-      });
       if (!key) {
         const $drawerRow = $target.closest('tr.skill-spec-row');
         const $skillRow = $drawerRow.prev('tr.skill-row');
         key = ($drawerRow.data('skillKey')) || ($skillRow.data('skillKey'));
-        console.log('[BESM DEBUG] .skill-spec-add fallback lookup', { 
-          drawerRowKey: $drawerRow.data('skillKey'),
-          skillRowKey: $skillRow.data('skillKey')
-        });
       }
-      console.log('[BESM DEBUG] .skill-spec-add final key', { key });
       if (!key) return;
       const k = String(key);
       const skill = this.actor.system?.skills?.[k] ?? {};
@@ -451,7 +435,6 @@ class BESMActorSheet extends ActorSheet {
       const $skillRow = $target.closest('tr.skill-row');
       const $drawerRow = $skillRow.next('tr.skill-spec-row');
       const k = (ev.currentTarget?.dataset?.skillKey) || ($skillRow.data('skillKey'));
-      console.log('[BESM DEBUG] .spec-chip-add clicked', { k });
       if (!k) return;
       const key = String(k);
       const skill = this.actor.system?.skills?.[key] ?? {};
@@ -471,10 +454,8 @@ class BESMActorSheet extends ActorSheet {
       const path = el.name;
       if (!path) return;
       const value = String(el.value ?? '');
-      console.log('[BESM DEBUG] spec-name input:', { path, value, drawer: $(el).closest('.skill-spec-row').hasClass('open') });
       // Update without re-rendering to keep drawer state
       await this.actor.update({ [path]: value }, { render: false });
-      console.log('[BESM DEBUG] spec-name update complete, drawer still open?', $(el).closest('.skill-spec-row').hasClass('open'));
     });
 
     // Persist specialization Bonus on change (commit on blur to avoid partial numbers)
@@ -483,10 +464,8 @@ class BESMActorSheet extends ActorSheet {
       const path = el.name;
       if (!path) return;
       const value = Number(el.value);
-      console.log('[BESM DEBUG] spec-bonus change:', { path, value, drawer: $(el).closest('.skill-spec-row').hasClass('open') });
       // Update without re-rendering to keep drawer state
       await this.actor.update({ [path]: isNaN(value) ? 0 : value }, { render: false });
-      console.log('[BESM DEBUG] spec-bonus update complete, drawer still open?', $(el).closest('.skill-spec-row').hasClass('open'));
     });
 
     // Persist skill fields on blur (rank, raceFeat, misc)
