@@ -11,6 +11,12 @@ import { BESMItem } from "./documents/item.js";
 Hooks.once("init", async function() {
   console.log("BESM d20 | Initializing the BESM d20 System");
 
+  // Configure initiative
+  CONFIG.Combat.initiative = {
+    formula: "1d20 + @abilities.dex.mod",
+    decimals: 0
+  };
+
   // Create a namespace within the game object
   game.besm = {
     BESMActor,
