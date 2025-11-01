@@ -500,8 +500,8 @@ class BESMActorSheet extends ActorSheet {
       await this.actor.update({ [path]: isNaN(value) ? 0 : value }, { render: false });
     });
 
-    // Persist class fields on blur (name and level)
-    html.find('input[name*="system.classes"]').on('blur', async ev => {
+    // Persist class fields on blur and change (name and level)
+    html.find('input[name*="system.classes"]').on('blur change', async ev => {
       const el = ev.currentTarget;
       const path = el.name;
       if (!path) return;
