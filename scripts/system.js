@@ -478,6 +478,18 @@ class BESMActorSheet extends ActorSheet {
       await this.actor.update({ [path]: isNaN(value) ? 0 : value }, { render: false });
     });
 
+    // Persist class fields on blur (name and level)
+    html.find('input[name*="system.classes"]').on('blur', async ev => {
+      const el = ev.currentTarget;
+      const path = el.name;
+      if (!path) return;
+      // Check if it's a level field (number) or name field (text)
+      const isLevel = path.includes('.level');
+      const value = isLevel ? Number(el.value) : String(el.value ?? '');
+      // Update without re-rendering
+      await this.actor.update({ [path]: isLevel ? (isNaN(value) ? 0 : value) : value }, { render: false });
+    });
+
     // Skill Specializations: delete
     html.find('.skill-spec-delete').click(async ev => {
       ev.preventDefault();
