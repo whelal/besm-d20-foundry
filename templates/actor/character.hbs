@@ -1,808 +1,309 @@
-test<form class="{{cssClass}} flexcol">
-
-  {{!-- Sheet Header --}}              <div class="ability-modifier rollable" data-roll="1d20+@abilities.{{key}}.mod" data-label="{{key}}">{{numberFormat ability.mod decimals=0 sign=true}}</div>              <input class="ability-score" name="system.abilities.{{key}}.value" type="text" value="{{ability.value}}" data-dtype="Number"/>
-
+<form class="{{cssClass}} flexcol">
+  <!-- ===== Header ===== -->
   <header class="sheet-header flexrow">
-
-    <img class="profile" src="{{actor.img}}" data-edit="img" title="{{actor.name}}" height="96" width="96"/>            </li>              <div class="ability-modifier rollable" data-roll="1d20+@abilities.{{key}}.mod" data-label="{{key}}">{{numberFormat ability.mod decimals=0 sign=true}}</div>
-
+    <img class="profile" src="{{actor.img}}" data-edit="img" title="{{actor.name}}" height="96" width="96"/>
     <div class="header-fields flexcol">
-
-      <h1 class="charname">            {{/each}}            </li>
-
+      <h1 class="charname">
         <input name="name" type="text" value="{{actor.name}}" placeholder="{{localize 'BESMD20.CharacterName'}}"/>
-
-      </h1>          </ol>            {{/each}}
+      </h1>
 
       <div class="header-meta grid header-grid">
-
-        <div class="meta-field">        </div>          </ol>
-
+        <div class="meta-field">
           <label>{{localize "BESMD20.CharacterPoints"}}</label>
-
-          <span class="meta-value">{{characterPoints.total}}</span>        </div>
-
+          <span class="meta-value">{{characterPoints.total}}</span>
         </div>
-
-        <div class="meta-field">        {{!-- Character Details --}}
-
+        <div class="meta-field">
           <label>{{localize "BESMD20.Health"}}</label>
-
-          <div class="meta-split">        <div class="character-details">        {{!-- Character Details --}}
-
-            <input type="number" name="system.health.value" value="{{system.health.value}}" data-dtype="Number"/>
-
-            <span>/</span>          <h3 class="items-header">{{localize "BESMD20.Details"}}</h3>        <div class="character-details">
-
-            <input type="number" name="system.health.max" value="{{system.health.max}}" data-dtype="Number"/>
-
-          </div>          <ol class="details-list">          <h3 class="items-header">{{localize "BESMD20.Details"}}</h3>
-
+          <div class="meta-split">
+            <input type="number" name="system.health.value" value="{{numberValue system.health.value}}" data-dtype="Number"/>
+            <span>/</span>
+            <input type="number" name="system.health.max" value="{{numberValue system.health.max}}" data-dtype="Number"/>
+          </div>
         </div>
-
-        <div class="meta-field">            <li class="detail flexrow">          <ol class="details-list">
-
+        <div class="meta-field">
           <label>{{localize "BESMD20.Energy"}}</label>
-
-          <div class="meta-split">              <label>{{localize "BESMD20.Level"}}</label>            <li class="detail flexrow">
-
-            <input type="number" name="system.energy.value" value="{{system.energy.value}}" data-dtype="Number"/>
-
-            <span>/</span>              <input type="text" name="system.level" value="{{system.level}}" data-dtype="Number"/>              <label>{{localize "BESMD20.Level"}}</label>
-
-            <input type="number" name="system.energy.max" value="{{system.energy.max}}" data-dtype="Number"/>
-
-          </div>            </li>              <input type="text" name="system.level" value="{{system.level}}" data-dtype="Number"/>
-
+          <div class="meta-split">
+            <input type="number" name="system.energy.value" value="{{numberValue system.energy.value}}" data-dtype="Number"/>
+            <span>/</span>
+            <input type="number" name="system.energy.max" value="{{numberValue system.energy.max}}" data-dtype="Number"/>
+          </div>
         </div>
-
-        <div class="meta-field">            <li class="detail flexrow">            </li>
-
+        <div class="meta-field">
           <label>{{localize "BESMD20.Defense"}}</label>
-
-          <input type="number" name="system.defense.value" value="{{system.defense.value}}" data-dtype="Number"/>              <label>{{localize "BESMD20.Experience"}}</label>            <li class="detail flexrow">
-
+          <input type="number" name="system.defense.value" value="{{numberValue system.defense.value}}" data-dtype="Number"/>
         </div>
-
-        <div class="meta-field">              <input type="text" name="system.experience" value="{{system.experience}}" data-dtype="Number"/>              <label>{{localize "BESMD20.Experience"}}</label>
-
+        <div class="meta-field">
           <label>{{localize "BESMD20.BaseMovement"}}</label>
-
-          <div class="meta-split">            </li>              <input type="text" name="system.experience" value="{{system.experience}}" data-dtype="Number"/>
-
-            <input type="number" name="system.movement.base" value="{{system.movement.base}}" data-dtype="Number"/>
-
-            <span>+</span>            <li class="detail flexrow">            </li>
-
-            <input type="number" name="system.movement.misc" value="{{system.movement.misc}}" data-dtype="Number"/>
-
-            <span>=</span>              <label>{{localize "BESMD20.ArmorBonus"}}</label>            <li class="detail flexrow">
-
+          <div class="meta-split">
+            <input type="number" name="system.movement.base" value="{{numberValue system.movement.base}}" data-dtype="Number"/>
+            <span>+</span>
+            <input type="number" name="system.movement.misc" value="{{numberValue system.movement.misc}}" data-dtype="Number"/>
+            <span>=</span>
             <span class="meta-value">{{system.movement.total}}</span>
-
-          </div>              <input type="text" name="system.armor.value" value="{{system.armor.value}}" data-dtype="Number"/>              <label>{{localize "BESMD20.ArmorBonus"}}</label>
-
+          </div>
         </div>
-
-      </div>            </li>              <input type="text" name="system.armor.value" value="{{system.armor.value}}" data-dtype="Number"/>
-
+      </div>
     </div>
+  </header>
 
-  </header>          </ol>            </li>
-
-
-
-  {{!-- Sheet Tabs --}}          </ol>
-
+  <!-- ===== Tabs ===== -->
   <nav class="sheet-tabs tabs" data-group="primary">
-
-    <a class="item" data-tab="main">{{localize "BESMD20.TabMain"}}</a>          {{!-- Character Points Summary --}}
-
+    <a class="item" data-tab="main">{{localize "BESMD20.TabMain"}}</a>
     <a class="item" data-tab="skills">{{localize "BESMD20.TabSkills"}}</a>
-
-    <a class="item" data-tab="powers">{{localize "BESMD20.TabPowers"}}</a>          <div class="character-points">          {{!-- Character Points Summary --}}
-
+    <a class="item" data-tab="powers">{{localize "BESMD20.TabPowers"}}</a>
     <a class="item" data-tab="attributes">{{localize "BESMD20.TabAttributes"}}</a>
-
-    <a class="item" data-tab="defects">{{localize "BESMD20.TabDefects"}}</a>            <h4>{{localize "BESMD20.CharacterPoints"}}</h4>          <div class="character-points">
-
+    <a class="item" data-tab="defects">{{localize "BESMD20.TabDefects"}}</a>
     <a class="item" data-tab="equipment">{{localize "BESMD20.Equipment"}}</a>
-
-    <a class="item" data-tab="bio">{{localize "BESMD20.TabBiography"}}</a>            <div class="points-breakdown">            <h4>{{localize "BESMD20.CharacterPoints"}}</h4>
-
+    <a class="item" data-tab="bio">{{localize "BESMD20.TabBiography"}}</a>
   </nav>
 
-              <div class="flexrow">            <div class="points-breakdown">
-
+  <!-- ===== Body ===== -->
   <section class="sheet-body content">
 
-    {{!-- Main Tab --}}                <span>{{localize "BESMD20.Powers"}}:</span>              <div class="flexrow">
-
+    <!-- === Main Tab === -->
     <div class="tab" data-group="primary" data-tab="main">
-
-      <section class="sheet-section section-info">                <span>{{characterPoints.powers}}</span>                <span>{{localize "BESMD20.Powers"}}:</span>
-
+      <section class="sheet-section section-info">
         <h2 class="section-title">{{localize "BESMD20.SectionCharacterInformation"}}</h2>
 
-        <div class="info-grid">              </div>                <span>{{characterPoints.powers}}</span>
-
-          <div class="form-field">
-
-            <label>{{localize "BESMD20.PlayerName"}}</label>              <div class="flexrow">              </div>
-
-            <input type="text" name="system.details.playerName" value="{{system.details.playerName}}"/>
-
-          </div>                <span>{{localize "BESMD20.Attributes"}}:</span>              <div class="flexrow">
-
-          <div class="form-field">
-
-            <label>{{localize "BESMD20.GMName"}}</label>                <span>{{characterPoints.attributes}}</span>                <span>{{localize "BESMD20.Attributes"}}:</span>
-
-            <input type="text" name="system.details.gmName" value="{{system.details.gmName}}"/>
-
-          </div>              </div>                <span>{{characterPoints.attributes}}</span>
-
-          <div class="form-field">
-
-            <label>{{localize "BESMD20.Campaign"}}</label>              <div class="flexrow">              </div>
-
-            <input type="text" name="system.details.campaign" value="{{system.details.campaign}}"/>
-
-          </div>                <span>{{localize "BESMD20.Defects"}}:</span>              <div class="flexrow">
-
-          <div class="form-field">
-
-            <label>{{localize "BESMD20.StartingLevel"}}</label>                <span>-{{characterPoints.defects}}</span>                <span>{{localize "BESMD20.Defects"}}:</span>
-
-            <input type="number" name="system.details.startingLevel" value="{{system.details.startingLevel}}" data-dtype="Number"/>
-
-          </div>              </div>                <span>-{{characterPoints.defects}}</span>
-
-          <div class="form-field">
-
-            <label>{{localize "BESMD20.DiscretionaryPoints"}}</label>              <hr>              </div>
-
-            <input type="number" name="system.details.discretionaryPoints" value="{{system.details.discretionaryPoints}}" data-dtype="Number"/>
-
-          </div>              <div class="flexrow total">              <hr>
-
-          <div class="form-field">
-
-            <label>{{localize "BESMD20.Race"}}</label>                <span><strong>{{localize "BESMD20.Total"}}:</strong></span>              <div class="flexrow total">
-
-            <input type="text" name="system.details.race" value="{{system.details.race}}"/>
-
-          </div>                <span><strong>{{characterPoints.total}}</strong></span>                <span><strong>{{localize "BESMD20.Total"}}:</strong></span>
-
-          <div class="form-field">
-
-            <label>{{localize "BESMD20.Size"}}</label>              </div>                <span><strong>{{characterPoints.total}}</strong></span>
-
-            <input type="text" name="system.details.size" value="{{system.details.size}}"/>
-
-          </div>            </div>              </div>
-
-          <div class="form-field">
-
-            <label>{{localize "BESMD20.Age"}}</label>          </div>            </div>
-
-            <input type="text" name="system.details.age" value="{{system.details.age}}"/>
-
-          </div>        </div>          </div>
-
-          <div class="form-field">
-
-            <label>{{localize "BESMD20.Height"}}</label>      </div>        </div>
-
-            <input type="text" name="system.details.height" value="{{system.details.height}}"/>
-
-          </div>    </div>      </div>
-
-          <div class="form-field">
-
-            <label>{{localize "BESMD20.Weight"}}</label>    </div>
-
-            <input type="text" name="system.details.weight" value="{{system.details.weight}}"/>
-
-          </div>    {{!-- Skills Tab --}}
-
-          <div class="form-field">
-
-            <label>{{localize "BESMD20.Gender"}}</label>    <div class="tab" data-group="primary" data-tab="skills">    {{!-- Skills Tab --}}
-
-            <input type="text" name="system.details.gender" value="{{system.details.gender}}"/>
-
-          </div>      <h3 class="items-header">{{localize "BESMD20.Skills"}}</h3>    <div class="tab" data-group="primary" data-tab="skills">
-
-          <div class="form-field">
-
-            <label>{{localize "BESMD20.Appearance"}}</label>      <ol class="skills-list">      <h3 class="items-header">{{localize "BESMD20.Skills"}}</h3>
-
-            <input type="text" name="system.details.appearance" value="{{system.details.appearance}}"/>
-
-          </div>        {{#each system.skills as |skill key|}}      <ol class="skills-list">
-
-        </div>
-
-        <div class="class-grid">        <li class="skill flexrow">        {{#each system.skills as |skill key|}}
-
-          {{#each system.classes as |class idx|}}
-
-          <div class="class-row">          <h4 class="skill-name rollable" data-roll="1d20+@abilities.{{skill.ability}}.mod+@skills.{{key}}.rank" data-label="{{key}}">{{localize (lookup config.skills key)}}</h4>        <li class="skill flexrow">
-
-            <label>{{localize "BESMD20.Class"}} {{inc idx}}</label>
-
-            <input type="text" name="system.classes.{{idx}}.name" value="{{class.name}}" placeholder="{{localize 'BESMD20.Class'}}"/>          <select class="skill-ability" name="system.skills.{{key}}.ability">          <h4 class="skill-name rollable" data-roll="1d20+@abilities.{{skill.ability}}.mod+@skills.{{key}}.rank" data-label="{{key}}">{{localize (lookup config.skills key)}}</h4>
-
-            <span class="class-level-label">{{localize "BESMD20.LevelShort"}}</span>
-
-            <input type="number" name="system.classes.{{idx}}.level" value="{{class.level}}" data-dtype="Number"/>            {{#each config.abilities as |abilityName abilityKey|}}          <select class="skill-ability" name="system.skills.{{key}}.ability">
-
+        <div class="info-grid grid grid-2col">
+          <div class="panel">
+            <h3 class="panel-title">{{localize "BESMD20.Details"}}</h3>
+            <ol class="details-list">
+              <li class="detail flexrow">
+                <label>{{localize "BESMD20.PlayerName"}}</label>
+                <input type="text" name="system.details.playerName" value="{{system.details.playerName}}"/>
+              </li>
+              <li class="detail flexrow">
+                <label>{{localize "BESMD20.GMName"}}</label>
+                <input type="text" name="system.details.gmName" value="{{system.details.gmName}}"/>
+              </li>
+              <li class="detail flexrow">
+                <label>{{localize "BESMD20.Campaign"}}</label>
+                <input type="text" name="system.details.campaign" value="{{system.details.campaign}}"/>
+              </li>
+              <li class="detail flexrow">
+                <label>{{localize "BESMD20.StartingLevel"}}</label>
+                <input type="number" name="system.details.startingLevel" value="{{numberValue system.details.startingLevel}}" data-dtype="Number"/>
+              </li>
+              <li class="detail flexrow">
+                <label>{{localize "BESMD20.DiscretionaryPoints"}}</label>
+                <input type="number" name="system.details.discretionaryPoints" value="{{numberValue system.details.discretionaryPoints}}" data-dtype="Number"/>
+              </li>
+              <li class="detail flexrow">
+                <label>{{localize "BESMD20.Race"}}</label>
+                <input type="text" name="system.details.race" value="{{system.details.race}}"/>
+              </li>
+              <li class="detail flexrow">
+                <label>{{localize "BESMD20.Size"}}</label>
+                <input type="text" name="system.details.size" value="{{system.details.size}}"/>
+              </li>
+              <li class="detail flexrow">
+                <label>{{localize "BESMD20.Age"}}</label>
+                <input type="text" name="system.details.age" value="{{system.details.age}}"/>
+              </li>
+              <li class="detail flexrow">
+                <label>{{localize "BESMD20.Gender"}}</label>
+                <input type="text" name="system.details.gender" value="{{system.details.gender}}"/>
+              </li>
+              <li class="detail flexrow">
+                <label>{{localize "BESMD20.Height"}}</label>
+                <input type="text" name="system.details.height" value="{{system.details.height}}"/>
+              </li>
+              <li class="detail flexrow">
+                <label>{{localize "BESMD20.Weight"}}</label>
+                <input type="text" name="system.details.weight" value="{{system.details.weight}}"/>
+              </li>
+              <li class="detail flexrow">
+                <label>{{localize "BESMD20.Appearance"}}</label>
+                <input type="text" name="system.details.appearance" value="{{system.details.appearance}}"/>
+              </li>
+            </ol>
           </div>
 
-          {{/each}}            <option value="{{abilityKey}}" {{#if (eq skill.ability abilityKey)}}selected{{/if}}>{{localize abilityName}}</option>            {{#each config.abilities as |abilityName abilityKey|}}
-
-        </div>
-
-      </section>            {{/each}}            <option value="{{abilityKey}}" {{#if (eq skill.ability abilityKey)}}selected{{/if}}>{{localize abilityName}}</option>
-
-
-
-      <section class="sheet-section section-abilities">          </select>            {{/each}}
-
-        <div class="grid grid-2col">
-
-          <div class="panel">          <input class="skill-rank" name="system.skills.{{key}}.rank" type="text" value="{{skill.rank}}" data-dtype="Number"/>          </select>
-
-            <h2 class="panel-title">{{localize "BESMD20.SectionAbilityScores"}}</h2>
-
-            <table class="ability-table">          <div class="skill-mod">{{numberFormat (add (lookup ../system.abilities skill.ability 'mod') skill.rank) decimals=0 sign=true}}</div>          <input class="skill-rank" name="system.skills.{{key}}.rank" type="text" value="{{skill.rank}}" data-dtype="Number"/>
-
+          <div class="panel">
+            <h3 class="panel-title">{{localize "BESMD20.SectionAbilityScores"}}</h3>
+            <table class="ability-table">
               <thead>
-
-                <tr>        </li>          <div class="skill-mod">{{numberFormat (add (lookup ../system.abilities skill.ability 'mod') skill.rank) decimals=0 sign=true}}</div>
-
-                  <th>{{localize "BESMD20.Name"}}</th>
-
-                  <th>{{localize "BESMD20.Score"}}</th>        {{/each}}        </li>
-
-                  <th>{{localize "BESMD20.Modifier"}}</th>
-
-                </tr>      </ol>        {{/each}}
-
-              </thead>
-
-              <tbody>    </div>      </ol>
-
-                {{#each config.abilities as |abilityLabel abilityKey|}}
-
-                {{#with (lookup ../system.abilities abilityKey) as |ability|}}    </div>
-
                 <tr>
-
-                  <td class="ability-name">{{localize abilityLabel}}</td>    {{!-- Powers Tab --}}
-
-                  <td><input type="number" name="system.abilities.{{abilityKey}}.value" value="{{ability.value}}" data-dtype="Number"/></td>
-
-                  <td class="ability-mod">{{numberFormat ability.mod decimals=0 sign=true}}</td>    <div class="tab" data-group="primary" data-tab="powers">    {{!-- Powers Tab --}}
-
+                  <th>{{localize "BESMD20.Name"}}</th>
+                  <th>{{localize "BESMD20.Score"}}</th>
+                  <th>{{localize "BESMD20.Modifier"}}</th>
+                  <th>{{localize "BESMD20.Roll"}}</th>
                 </tr>
-
-                {{/with}}      <div class="items-header flexrow">    <div class="tab" data-group="primary" data-tab="powers">
-
+              </thead>
+              <tbody>
+                {{#each config.abilities as |abilityLabel abilityKey|}}
+                  {{#with (lookup ../system.abilities abilityKey) as |ability|}}
+                  <tr>
+                    <td class="ability-name">{{abilityLabel}}</td>
+                    <td><input type="number" name="system.abilities.{{abilityKey}}.value" value="{{numberValue ability.value}}" data-dtype="Number"/></td>
+                    <td class="ability-mod">{{signedNumber ability.mod}}</td>
+                    <td class="ability-roll">
+                      <a class="rollable" data-roll="1d20+{{ability.mod}}" data-label="{{abilityLabel}} Check">
+                        <i class="fas fa-dice-d20"></i>
+                      </a>
+                    </td>
+                  </tr>
+                  {{/with}}
                 {{/each}}
-
-              </tbody>        <h3>{{localize "BESMD20.Powers"}}</h3>      <div class="items-header flexrow">
-
+              </tbody>
             </table>
 
-          </div>        <a class="item-control item-create" title="{{localize 'BESMD20.ItemCreate'}}" data-type="power">        <h3>{{localize "BESMD20.Powers"}}</h3>
-
-          <div class="panel">
-
-            <h2 class="panel-title">{{localize "BESMD20.SectionCalculatedValues"}}</h2>          <i class="fas fa-plus"></i> {{localize "BESMD20.Add"}}        <a class="item-control item-create" title="{{localize 'BESMD20.ItemCreate'}}" data-type="power">
-
+            <h3 class="panel-title">{{localize "BESMD20.SectionCalculatedValues"}}</h3>
             <table class="saves-table">
-
-              <thead>        </a>          <i class="fas fa-plus"></i> {{localize "BESMD20.Add"}}
-
+              <thead>
                 <tr>
-
-                  <th>{{localize "BESMD20.SavingThrows"}}</th>      </div>        </a>
-
+                  <th>{{localize "BESMD20.SavingThrows"}}</th>
                   <th>{{localize "BESMD20.Base"}}</th>
-
-                  <th>{{localize "BESMD20.AbilityMod"}}</th>      <ol class="items-list">      </div>
-
+                  <th>{{localize "BESMD20.AbilityMod"}}</th>
                   <th>{{localize "BESMD20.Misc"}}</th>
-
-                  <th>{{localize "BESMD20.Total"}}</th>        <li class="item-header flexrow">      <ol class="items-list">
-
+                  <th>{{localize "BESMD20.Total"}}</th>
                 </tr>
-
-              </thead>          <div class="item-name">{{localize "BESMD20.Name"}}</div>        <li class="item-header flexrow">
-
+              </thead>
               <tbody>
-
-                {{#with system.saves.fortitude as |fort|}}          <div class="item-rank">{{localize "BESMD20.Rank"}}</div>          <div class="item-name">{{localize "BESMD20.Name"}}</div>
-
+                {{#with system.saves.fortitude as |fort|}}
                 <tr>
-
-                  <td>{{localize "BESMD20.SavingThrowFortitude"}}</td>          <div class="item-cost">{{localize "BESMD20.Cost"}}</div>          <div class="item-rank">{{localize "BESMD20.Rank"}}</div>
-
-                  <td><input type="number" name="system.saves.fortitude.base" value="{{fort.base}}" data-dtype="Number"/></td>
-
-                  <td>{{numberFormat fort.abilityMod decimals=0 sign=true}}</td>          <div class="item-controls"></div>          <div class="item-cost">{{localize "BESMD20.Cost"}}</div>
-
-                  <td><input type="number" name="system.saves.fortitude.misc" value="{{fort.misc}}" data-dtype="Number"/></td>
-
-                  <td>{{numberFormat fort.total decimals=0 sign=true}}</td>        </li>          <div class="item-controls"></div>
-
+                  <td>{{localize "BESMD20.SavingThrowFortitude"}}</td>
+                  <td><input type="number" name="system.saves.fortitude.base" value="{{numberValue fort.base}}" data-dtype="Number"/></td>
+                  <td>{{signedNumber fort.abilityMod}}</td>
+                  <td><input type="number" name="system.saves.fortitude.misc" value="{{numberValue fort.misc}}" data-dtype="Number"/></td>
+                  <td>{{signedNumber fort.total}}</td>
                 </tr>
-
-                {{/with}}        {{#each powers as |item id|}}        </li>
-
-                {{#with system.saves.reflex as |ref|}}
-
-                <tr>        <li class="item flexrow" data-item-id="{{item.id}}">        {{#each powers as |item id|}}
-
-                  <td>{{localize "BESMD20.SavingThrowReflex"}}</td>
-
-                  <td><input type="number" name="system.saves.reflex.base" value="{{ref.base}}" data-dtype="Number"/></td>          <div class="item-name">        <li class="item flexrow" data-item-id="{{item.id}}">
-
-                  <td>{{numberFormat ref.abilityMod decimals=0 sign=true}}</td>
-
-                  <td><input type="number" name="system.saves.reflex.misc" value="{{ref.misc}}" data-dtype="Number"/></td>            <div class="item-image"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>          <div class="item-name">
-
-                  <td>{{numberFormat ref.total decimals=0 sign=true}}</td>
-
-                </tr>            <h4>{{item.name}}</h4>            <div class="item-image"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
-
                 {{/with}}
-
-                {{#with system.saves.will as |will|}}          </div>            <h4>{{item.name}}</h4>
-
+                {{#with system.saves.reflex as |ref|}}
                 <tr>
-
-                  <td>{{localize "BESMD20.SavingThrowWill"}}</td>          <div class="item-rank">{{item.system.rank}}</div>          </div>
-
-                  <td><input type="number" name="system.saves.will.base" value="{{will.base}}" data-dtype="Number"/></td>
-
-                  <td>{{numberFormat will.abilityMod decimals=0 sign=true}}</td>          <div class="item-cost">{{item.system.totalCost}}</div>          <div class="item-rank">{{item.system.rank}}</div>
-
-                  <td><input type="number" name="system.saves.will.misc" value="{{will.misc}}" data-dtype="Number"/></td>
-
-                  <td>{{numberFormat will.total decimals=0 sign=true}}</td>          <div class="item-controls">          <div class="item-cost">{{item.system.totalCost}}</div>
-
+                  <td>{{localize "BESMD20.SavingThrowReflex"}}</td>
+                  <td><input type="number" name="system.saves.reflex.base" value="{{numberValue ref.base}}" data-dtype="Number"/></td>
+                  <td>{{signedNumber ref.abilityMod}}</td>
+                  <td><input type="number" name="system.saves.reflex.misc" value="{{numberValue ref.misc}}" data-dtype="Number"/></td>
+                  <td>{{signedNumber ref.total}}</td>
                 </tr>
-
-                {{/with}}            <a class="item-control item-activate" title="{{localize 'BESMD20.Activate'}}"><i class="fas fa-magic"></i></a>          <div class="item-controls">
-
+                {{/with}}
+                {{#with system.saves.will as |will|}}
+                <tr>
+                  <td>{{localize "BESMD20.SavingThrowWill"}}</td>
+                  <td><input type="number" name="system.saves.will.base" value="{{numberValue will.base}}" data-dtype="Number"/></td>
+                  <td>{{signedNumber will.abilityMod}}</td>
+                  <td><input type="number" name="system.saves.will.misc" value="{{numberValue will.misc}}" data-dtype="Number"/></td>
+                  <td>{{signedNumber will.total}}</td>
+                </tr>
+                {{/with}}
               </tbody>
-
-            </table>            <a class="item-control item-edit" title="{{localize 'BESMD20.ItemEdit'}}"><i class="fas fa-edit"></i></a>            <a class="item-control item-activate" title="{{localize 'BESMD20.Activate'}}"><i class="fas fa-magic"></i></a>
+            </table>
 
             <table class="combat-table">
-
-              <tbody>            <a class="item-control item-delete" title="{{localize 'BESMD20.ItemDelete'}}"><i class="fas fa-trash"></i></a>            <a class="item-control item-edit" title="{{localize 'BESMD20.ItemEdit'}}"><i class="fas fa-edit"></i></a>
-
-                <tr>
-
-                  <th>{{localize "BESMD20.BaseAttackBonus"}}</th>          </div>            <a class="item-control item-delete" title="{{localize 'BESMD20.ItemDelete'}}"><i class="fas fa-trash"></i></a>
-
-                  <td><input type="number" name="system.combat.baseAttackBonus" value="{{system.combat.baseAttackBonus}}" data-dtype="Number"/></td>
-
-                  <th>{{localize "BESMD20.MeleeAttack"}}</th>        </li>          </div>
-
-                  <td>{{numberFormat system.combat.meleeTotal decimals=0 sign=true}}</td>
-
-                </tr>        {{/each}}        </li>
-
-                <tr>
-
-                  <th>{{localize "BESMD20.RangedAttack"}}</th>      </ol>        {{/each}}
-
-                  <td>{{numberFormat system.combat.rangedTotal decimals=0 sign=true}}</td>
-
-                  <th>{{localize "BESMD20.Initiative"}}</th>    </div>      </ol>
-
-                  <td>
-
-                    <div class="meta-split">    </div>
-
-                      <input type="number" name="system.combat.initiativeMisc" value="{{system.combat.initiativeMisc}}" data-dtype="Number"/>
-
-                      <span>=</span>    {{!-- Attributes Tab --}}
-
-                      <span class="meta-value">{{numberFormat system.combat.initiativeTotal decimals=0 sign=true}}</span>
-
-                    </div>    <div class="tab" data-group="primary" data-tab="attributes">    {{!-- Attributes Tab --}}
-
-                  </td>
-
-                </tr>      <div class="items-header flexrow">    <div class="tab" data-group="primary" data-tab="attributes">
-
-                <tr>
-
-                  <th>{{localize "BESMD20.ArmorClass"}}</th>        <h3>{{localize "BESMD20.Attributes"}}</h3>      <div class="items-header flexrow">
-
-                  <td>
-
-                    <div class="meta-split">        <a class="item-control item-create" title="{{localize 'BESMD20.ItemCreate'}}" data-type="attribute">        <h3>{{localize "BESMD20.Attributes"}}</h3>
-
-                      <input type="number" name="system.armor.value" value="{{system.armor.value}}" data-dtype="Number"/>
-
-                      <span>+</span>          <i class="fas fa-plus"></i> {{localize "BESMD20.Add"}}        <a class="item-control item-create" title="{{localize 'BESMD20.ItemCreate'}}" data-type="attribute">
-
-                      <input type="number" name="system.combat.defenseMisc" value="{{system.combat.defenseMisc}}" data-dtype="Number"/>
-
-                      <span>=</span>        </a>          <i class="fas fa-plus"></i> {{localize "BESMD20.Add"}}
-
-                      <span class="meta-value">{{system.combat.armorClass}}</span>
-
-                    </div>      </div>        </a>
-
-                  </td>
-
-                  <th>{{localize "BESMD20.ShockValue"}}</th>      <ol class="items-list">      </div>
-
-                  <td><input type="number" name="system.combat.shockValue" value="{{system.combat.shockValue}}" data-dtype="Number"/></td>
-
-                </tr>        <li class="item-header flexrow">      <ol class="items-list">
-
-              </tbody>
-
-            </table>          <div class="item-name">{{localize "BESMD20.Name"}}</div>        <li class="item-header flexrow">
-
-          </div>
-
-        </div>          <div class="item-rank">{{localize "BESMD20.Rank"}}</div>          <div class="item-name">{{localize "BESMD20.Name"}}</div>
-
-      </section>
-
-          <div class="item-cost">{{localize "BESMD20.Cost"}}</div>          <div class="item-rank">{{localize "BESMD20.Rank"}}</div>
-
-      <section class="sheet-section section-traits">
-
-        <h2 class="section-title">{{localize "BESMD20.SectionTraits"}}</h2>          <div class="item-controls"></div>          <div class="item-cost">{{localize "BESMD20.Cost"}}</div>
-
-        <div class="grid grid-2col trait-grid">
-
-          <div class="panel">        </li>          <div class="item-controls"></div>
-
-            <div class="panel-header">
-
-              <h3>{{localize "BESMD20.AttributesFeats"}}</h3>        {{#each attributes as |item id|}}        </li>
-
-              <div class="panel-controls">
-
-                <a class="item-control item-create" data-type="power" title="{{localize 'BESMD20.ItemCreate'}}">+ {{localize 'BESMD20.Item.Power'}}</a>        <li class="item flexrow" data-item-id="{{item.id}}">        {{#each attributes as |item id|}}
-
-                <a class="item-control item-create" data-type="attribute" title="{{localize 'BESMD20.ItemCreate'}}">+ {{localize 'BESMD20.Item.Attribute'}}</a>
-
-              </div>          <div class="item-name">        <li class="item flexrow" data-item-id="{{item.id}}">
-
-            </div>
-
-            <ol class="items-list">            <div class="item-image"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>          <div class="item-name">
-
-              {{#each powers as |item|}}
-
-              <li class="item flexrow" data-item-id="{{item.id}}">            <h4>{{item.name}}</h4>            <div class="item-image"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
-
-                <div class="item-name">
-
-                  <div class="item-image"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>          </div>            <h4>{{item.name}}</h4>
-
-                  <h4>{{item.name}}</h4>
-
-                </div>          <div class="item-rank">{{item.system.rank}}</div>          </div>
-
-                <div class="item-rank">{{item.system.rank}}</div>
-
-                <div class="item-cost">{{item.system.totalCost}}</div>          <div class="item-cost">{{item.system.totalCost}}</div>          <div class="item-rank">{{item.system.rank}}</div>
-
-                <div class="item-controls">
-
-                  <a class="item-control item-activate" title="{{localize 'BESMD20.Activate'}}"><i class="fas fa-magic"></i></a>          <div class="item-controls">          <div class="item-cost">{{item.system.totalCost}}</div>
-
-                  <a class="item-control item-edit" title="{{localize 'BESMD20.ItemEdit'}}"><i class="fas fa-edit"></i></a>
-
-                  <a class="item-control item-delete" title="{{localize 'BESMD20.ItemDelete'}}"><i class="fas fa-trash"></i></a>            <a class="item-control item-edit" title="{{localize 'BESMD20.ItemEdit'}}"><i class="fas fa-edit"></i></a>          <div class="item-controls">
-
-                </div>
-
-              </li>            <a class="item-control item-delete" title="{{localize 'BESMD20.ItemDelete'}}"><i class="fas fa-trash"></i></a>            <a class="item-control item-edit" title="{{localize 'BESMD20.ItemEdit'}}"><i class="fas fa-edit"></i></a>
-
-              {{/each}}
-
-              {{#each attributes as |item|}}          </div>            <a class="item-control item-delete" title="{{localize 'BESMD20.ItemDelete'}}"><i class="fas fa-trash"></i></a>
-
-              <li class="item flexrow" data-item-id="{{item.id}}">
-
-                <div class="item-name">        </li>          </div>
-
-                  <div class="item-image"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
-
-                  <h4>{{item.name}}</h4>        {{/each}}        </li>
-
-                </div>
-
-                <div class="item-rank">{{item.system.rank}}</div>      </ol>        {{/each}}
-
-                <div class="item-cost">{{item.system.totalCost}}</div>
-
-                <div class="item-controls">    </div>      </ol>
-
-                  <a class="item-control item-edit" title="{{localize 'BESMD20.ItemEdit'}}"><i class="fas fa-edit"></i></a>
-
-                  <a class="item-control item-delete" title="{{localize 'BESMD20.ItemDelete'}}"><i class="fas fa-trash"></i></a>    </div>
-
-                </div>
-
-              </li>    {{!-- Defects Tab --}}
-
-              {{/each}}
-
-              {{#unless powers.length}}    <div class="tab" data-group="primary" data-tab="defects">    {{!-- Defects Tab --}}
-
-              {{#unless attributes.length}}
-
-              <li class="item empty">{{localize "BESMD20.AttributesFeatsEmpty"}}</li>      <div class="items-header flexrow">    <div class="tab" data-group="primary" data-tab="defects">
-
-              {{/unless}}
-
-              {{/unless}}        <h3>{{localize "BESMD20.Defects"}}</h3>      <div class="items-header flexrow">
-
-            </ol>
-
-          </div>        <a class="item-control item-create" title="{{localize 'BESMD20.ItemCreate'}}" data-type="defect">        <h3>{{localize "BESMD20.Defects"}}</h3>
-
-          <div class="panel">
-
-            <div class="panel-header">          <i class="fas fa-plus"></i> {{localize "BESMD20.Add"}}        <a class="item-control item-create" title="{{localize 'BESMD20.ItemCreate'}}" data-type="defect">
-
-              <h3>{{localize "BESMD20.DefectsList"}}</h3>
-
-              <div class="panel-controls">        </a>          <i class="fas fa-plus"></i> {{localize "BESMD20.Add"}}
-
-                <a class="item-control item-create" data-type="defect" title="{{localize 'BESMD20.ItemCreate'}}">+ {{localize 'BESMD20.Item.Defect'}}</a>
-
-              </div>      </div>        </a>
-
-            </div>
-
-            <ol class="items-list">      <ol class="items-list">      </div>
-
-              {{#each defects as |item|}}
-
-              <li class="item flexrow" data-item-id="{{item.id}}">        <li class="item-header flexrow">      <ol class="items-list">
-
-                <div class="item-name">
-
-                  <div class="item-image"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>          <div class="item-name">{{localize "BESMD20.Name"}}</div>        <li class="item-header flexrow">
-
-                  <h4>{{item.name}}</h4>
-
-                </div>          <div class="item-rank">{{localize "BESMD20.Rank"}}</div>          <div class="item-name">{{localize "BESMD20.Name"}}</div>
-
-                <div class="item-cost">{{item.system.totalBonus}}</div>
-
-                <div class="item-controls">          <div class="item-bonus">{{localize "BESMD20.Bonus"}}</div>          <div class="item-rank">{{localize "BESMD20.Rank"}}</div>
-
-                  <a class="item-control item-edit" title="{{localize 'BESMD20.ItemEdit'}}"><i class="fas fa-edit"></i></a>
-
-                  <a class="item-control item-delete" title="{{localize 'BESMD20.ItemDelete'}}"><i class="fas fa-trash"></i></a>          <div class="item-controls"></div>          <div class="item-bonus">{{localize "BESMD20.Bonus"}}</div>
-
-                </div>
-
-              </li>        </li>          <div class="item-controls"></div>
-
-              {{/each}}
-
-              {{#unless defects.length}}        {{#each defects as |item id|}}        </li>
-
-              <li class="item empty">{{localize "BESMD20.DefectsEmpty"}}</li>
-
-              {{/unless}}        <li class="item flexrow" data-item-id="{{item.id}}">        {{#each defects as |item id|}}
-
-            </ol>
-
-            <h3 class="panel-title skills-title">{{localize "BESMD20.SkillsSummary"}}</h3>          <div class="item-name">        <li class="item flexrow" data-item-id="{{item.id}}">
-
-            <table class="skills-summary">
-
-              <thead>            <div class="item-image"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>          <div class="item-name">
-
-                <tr>
-
-                  <th>{{localize "BESMD20.Name"}}</th>            <h4>{{item.name}}</h4>            <div class="item-image"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
-
-                  <th>{{localize "BESMD20.Ability"}}</th>
-
-                  <th>{{localize "BESMD20.Rank"}}</th>          </div>            <h4>{{item.name}}</h4>
-
-                  <th>{{localize "BESMD20.AbilityMod"}}</th>
-
-                  <th>{{localize "BESMD20.SkillTotal"}}</th>          <div class="item-rank">{{item.system.rank}}</div>          </div>
-
-                </tr>
-
-              </thead>          <div class="item-bonus">+{{item.system.totalBonus}}</div>          <div class="item-rank">{{item.system.rank}}</div>
-
               <tbody>
-
-                {{#each system.skills as |skill key|}}          <div class="item-controls">          <div class="item-bonus">+{{item.system.totalBonus}}</div>
-
                 <tr>
-
-                  <td>{{localize (lookup ../config.skills key)}}</td>            <a class="item-control item-edit" title="{{localize 'BESMD20.ItemEdit'}}"><i class="fas fa-edit"></i></a>          <div class="item-controls">
-
-                  <td>{{localize (lookup ../config.abilities skill.ability)}}</td>
-
-                  <td><input type="number" name="system.skills.{{key}}.rank" value="{{skill.rank}}" data-dtype="Number"/></td>            <a class="item-control item-delete" title="{{localize 'BESMD20.ItemDelete'}}"><i class="fas fa-trash"></i></a>            <a class="item-control item-edit" title="{{localize 'BESMD20.ItemEdit'}}"><i class="fas fa-edit"></i></a>
-
-                  <td>{{numberFormat skill.abilityMod decimals=0 sign=true}}</td>
-
-                  <td>{{numberFormat skill.total decimals=0 sign=true}}</td>          </div>            <a class="item-control item-delete" title="{{localize 'BESMD20.ItemDelete'}}"><i class="fas fa-trash"></i></a>
-
+                  <th>{{localize "BESMD20.BaseAttackBonus"}}</th>
+                  <td><input type="number" name="system.combat.baseAttackBonus" value="{{numberValue system.combat.baseAttackBonus}}" data-dtype="Number"/></td>
+                  <th>{{localize "BESMD20.MeleeAttack"}}</th>
+                  <td>{{signedNumber system.combat.meleeTotal}}</td>
                 </tr>
-
-                {{/each}}        </li>          </div>
-
+                <tr>
+                  <th>{{localize "BESMD20.RangedAttack"}}</th>
+                  <td>{{signedNumber system.combat.rangedTotal}}</td>
+                  <th>{{localize "BESMD20.Initiative"}}</th>
+                  <td>
+                    <div class="meta-split">
+                      <input type="number" name="system.combat.initiativeMisc" value="{{numberValue system.combat.initiativeMisc}}" data-dtype="Number"/>
+                      <span>=</span>
+                      <span class="meta-value">{{signedNumber system.combat.initiativeTotal}}</span>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <th>{{localize "BESMD20.ArmorClass"}}</th>
+                  <td>
+                    <div class="meta-split">
+                      <input type="number" name="system.armor.value" value="{{numberValue system.armor.value}}" data-dtype="Number"/>
+                      <span>+</span>
+                      <input type="number" name="system.combat.defenseMisc" value="{{numberValue system.combat.defenseMisc}}" data-dtype="Number"/>
+                      <span>=</span>
+                      <span class="meta-value">{{system.combat.armorClass}}</span>
+                    </div>
+                  </td>
+                  <th>{{localize "BESMD20.ShockValue"}}</th>
+                  <td><input type="number" name="system.combat.shockValue" value="{{numberValue system.combat.shockValue}}" data-dtype="Number"/></td>
+                </tr>
               </tbody>
-
-            </table>        {{/each}}        </li>
-
+            </table>
           </div>
-
-        </div>      </ol>        {{/each}}
-
+        </div>
       </section>
-
-    </div>      </ol>
-
-      <section class="sheet-section section-notes">
-
-        <h2 class="section-title">{{localize "BESMD20.SectionPossessions"}}</h2>    </div>
-
-        <textarea name="system.notes">{{system.notes}}</textarea>
-
-      </section>    {{!-- Biography Tab --}}
-
     </div>
 
-    <div class="tab" data-group="primary" data-tab="bio">    {{!-- Biography Tab --}}
-
-    {{!-- Skills Tab --}}
-
-    <div class="tab" data-group="primary" data-tab="skills">      <div class="grid grid-1col">    <div class="tab" data-group="primary" data-tab="bio">
-
+    <!-- === Skills Tab === -->
+    <div class="tab" data-group="primary" data-tab="skills">
       <h3 class="items-header">{{localize "BESMD20.Skills"}}</h3>
-
-      <table class="skills-table">        <div class="editor">      <div class="grid grid-1col">
-
+      <table class="skills-table">
         <thead>
-
-          <tr>          <label>{{localize "BESMD20.Biography"}}</label>        <div class="editor">
-
+          <tr>
             <th>{{localize "BESMD20.Name"}}</th>
-
-            <th>{{localize "BESMD20.Ability"}}</th>          {{editor system.biography target="system.biography" button=true editable=editable}}          <label>{{localize "BESMD20.Biography"}}</label>
-
+            <th>{{localize "BESMD20.Ability"}}</th>
             <th>{{localize "BESMD20.Rank"}}</th>
-
-            <th>{{localize "BESMD20.AbilityMod"}}</th>        </div>          {{editor system.biography target="system.biography" button=true editable=editable}}
-
+            <th>{{localize "BESMD20.AbilityMod"}}</th>
             <th>{{localize "BESMD20.SkillTotal"}}</th>
-
-          </tr>        <div class="editor">        </div>
-
+            <th>{{localize "BESMD20.Roll"}}</th>
+          </tr>
         </thead>
+        <tbody>
+          {{#each config.skills as |label key|}}
+            {{#with (lookup ../system.skills key) as |skill|}}
+            <tr class="skill-row" data-skill-key="{{../key}}">
+              <td>{{label}}</td>
+              <td>
+                <select name="system.skills.{{../key}}.ability">
+                  {{#each ../../config.abilities as |al abKey|}}
+                    <option value="{{abKey}}" {{#if (eq abKey skill.ability)}}selected{{/if}}>{{al}}</option>
+                  {{/each}}
+                </select>
+              </td>
+              <td><input type="number" name="system.skills.{{../key}}.rank" value="{{numberValue skill.rank}}" data-dtype="Number"/></td>
+              <td>{{signedNumber skill.abilityMod}}</td>
+              <td>{{signedNumber skill.total}}</td>
+              <td class="skill-roll"><a class="rollable" data-roll="1d20+{{skill.total}}" data-label="{{label}} Check"><i class="fas fa-dice-d20"></i></a></td>
+            </tr>
+            {{/with}}
+          {{/each}}
+        </tbody>
+      </table>
+    </div>
 
-        <tbody>          <label>{{localize "BESMD20.Notes"}}</label>        <div class="editor">
+    <!-- === Powers Tab === -->
+    <div class="tab" data-group="primary" data-tab="powers">
+      <div class="items-header flexrow">
+        <h3>{{localize "BESMD20.Powers"}}</h3>
+        <a class="item-control item-create" title="{{localize 'BESMD20.ItemCreate'}}" data-type="power"><i class="fas fa-plus"></i> {{localize "BESMD20.Add"}}</a>
+      </div>
+      <ol class="items-list">
+        <li class="item-header flexrow">
+          <div class="item-name">{{localize "BESMD20.Name"}}</div>
+          <div class="item-rank">{{localize "BESMD20.Rank"}}</div>
+          <div class="item-cost">{{localize "BESMD20.TotalCost"}}</div>
+          <div class="item-controls"></div>
+        </li>
+        {{#each powers as |item|}}
+        <li class="item flexrow" data-item-id="{{#if item.id}}{{item.id}}{{else}}{{item._id}}{{/if}}">
+          <div class="item-name">
+            <div class="item-image"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
+            <h4>{{item.name}}</h4>
+          </div>
+          <div class="item-rank">{{item.system.rank}}</div>
+          <div class="item-cost">{{item.system.totalCost}}</div>
+          <div class="item-controls">
+            <a class="item-control item-activate" title="{{localize 'BESMD20.Activate'}}"><i class="fas fa-magic"></i></a>
+            <a class="item-control item-edit" title="{{localize 'BESMD20.ItemEdit'}}"><i class="fas fa-edit"></i></a>
+            <a class="item-control item-delete" title="{{localize 'BESMD20.ItemDelete'}}"><i class="fas fa-trash"></i></a>
+          </div>
+        </li>
+        {{/each}}
+        {{#unless powers.length}}
+        <li class="item empty">{{localize "BESMD20.PowersEmpty"}}</li>
+        {{/unless}}
+      </ol>
+    </div>
 
-          {{#each system.skills as |skill key|}}
-
-          <tr>          {{editor system.notes target="system.notes" button=true editable=editable}}          <label>{{localize "BESMD20.Notes"}}</label>
-
-            <td class="rollable" data-roll="1d20+@skills.{{key}}.total" data-label="{{localize (lookup ../config.skills key)}}">{{localize (lookup ../config.skills key)}}</td>
-
-            <td>        </div>          {{editor system.notes target="system.notes" button=true editable=editable}}
-
-              <select name="system.skills.{{key}}.ability">
-
-                {{#each ../config.abilities as |label abilityKey|}}      </div>        </div>
-
-                <option value="{{abilityKey}}" {{#if (eq abilityKey skill.ability)}}selected{{/if}}>{{localize label}}</option>
-
-                {{/each}}    </div>      </div>
-
-              </select>
-
-            </td>    </div>
-
-            <td><input type="number" name="system.skills.{{key}}.rank" value="{{skill.rank}}" data-dtype="Number"/></td>
-
-            <td>{{numberFormat skill.abilityMod decimals=0 sign=true}}</td>  </section>
-
-            <td>{{numberFormat skill.total decimals=0 sign=true}}</td>
-
-          </tr></form>  </section>
-
-          {{/each}}</form>
-
-        </tbody>            <td>{{cap key}}</td>
-
-      </table>            <td><input type="number" name="system.skills.{{key}}.rank" value="{{s.rank}}" /></td>
-
-    </div>            <td>
-
-              <select name="system.skills.{{key}}.ability">
-
-    {{!-- Powers Tab --}}                <option value="str" {{#if (eq s.ability "str")}}selected{{/if}}>STR</option>
-
-    <div class="tab" data-group="primary" data-tab="powers">                <option value="dex" {{#if (eq s.ability "dex")}}selected{{/if}}>DEX</option>
-
-      <div class="items-header flexrow">                <option value="con" {{#if (eq s.ability "con")}}selected{{/if}}>CON</option>
-
-        <h3>{{localize "BESMD20.Powers"}}</h3>                <option value="int" {{#if (eq s.ability "int")}}selected{{/if}}>INT</option>
-
-        <a class="item-control item-create" title="{{localize 'BESMD20.ItemCreate'}}" data-type="power"><i class="fas fa-plus"></i> {{localize 'BESMD20.Add'}}</a>                <option value="wis" {{#if (eq s.ability "wis")}}selected{{/if}}>WIS</option>
-
-      </div>                <option value="cha" {{#if (eq s.ability "cha")}}selected{{/if}}>CHA</option>
-
-      <ol class="items-list">              </select>
-
-        <li class="item-header flexrow">            </td>
-
-          <div class="item-name">{{localize "BESMD20.Name"}}</div>            <td><button type="button" data-action="roll-ability" data-ability="{{s.ability}}" data-skill="{{key}}">{{localize "BESMD20.Roll.D20"}}</button></td>
-
-          <div class="item-rank">{{localize "BESMD20.Rank"}}</div>          </tr>
-
-          <div class="item-cost">{{localize "BESMD20.TotalCost"}}</div>          {{/each}}
-
-          <div class="item-controls"></div>        </table>
-
-        </li>      </div>
-
-        {{#each powers as |item|}}    </div>
-
-        <li class="item flexrow" data-item-id="{{item.id}}">
-
-          <div class="item-name">    <div class="tab" data-group="primary" data-tab="powers">
-
-            <div class="item-image"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>      <div class="section">
-
-            <h4>{{item.name}}</h4>        <h2>{{localize "BESMD20.Powers"}}</h2>
-
-          </div>        <ol class="items-list">
-
-          <div class="item-rank">{{item.system.rank}}</div>          {{#each items as |item id|}}
-
-          <div class="item-cost">{{item.system.totalCost}}</div>            {{#if (eq item.type "power")}}
-
-          <div class="item-controls">              <li class="item flexrow" data-item-id="{{item.id}}">
-
-            <a class="item-control item-activate" title="{{localize 'BESMD20.Activate'}}"><i class="fas fa-magic"></i></a>                <div class="item-name">{{item.name}}</div>
-
-            <a class="item-control item-edit" title="{{localize 'BESMD20.ItemEdit'}}"><i class="fas fa-edit"></i></a>              </li>
-
-            <a class="item-control item-delete" title="{{localize 'BESMD20.ItemDelete'}}"><i class="fas fa-trash"></i></a>            {{/if}}
-
-          </div>          {{/each}}
-
-        </li>        </ol>
-
-        {{/each}}      </div>
-
-      </ol>    </div>
-
-    </div>  </section>
-
-</form>
-
-    {{!-- Attributes Tab --}}
+    <!-- === Attributes Tab === -->
     <div class="tab" data-group="primary" data-tab="attributes">
       <div class="items-header flexrow">
         <h3>{{localize "BESMD20.Attributes"}}</h3>
@@ -816,7 +317,7 @@ test<form class="{{cssClass}} flexcol">
           <div class="item-controls"></div>
         </li>
         {{#each attributes as |item|}}
-        <li class="item flexrow" data-item-id="{{item.id}}">
+        <li class="item flexrow" data-item-id="{{#if item.id}}{{item.id}}{{else}}{{item._id}}{{/if}}">
           <div class="item-name">
             <div class="item-image"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
             <h4>{{item.name}}</h4>
@@ -829,10 +330,13 @@ test<form class="{{cssClass}} flexcol">
           </div>
         </li>
         {{/each}}
+        {{#unless attributes.length}}
+        <li class="item empty">{{localize "BESMD20.AttributesFeatsEmpty"}}</li>
+        {{/unless}}
       </ol>
     </div>
 
-    {{!-- Defects Tab --}}
+    <!-- === Defects Tab === -->
     <div class="tab" data-group="primary" data-tab="defects">
       <div class="items-header flexrow">
         <h3>{{localize "BESMD20.Defects"}}</h3>
@@ -845,7 +349,7 @@ test<form class="{{cssClass}} flexcol">
           <div class="item-controls"></div>
         </li>
         {{#each defects as |item|}}
-        <li class="item flexrow" data-item-id="{{item.id}}">
+        <li class="item flexrow" data-item-id="{{#if item.id}}{{item.id}}{{else}}{{item._id}}{{/if}}">
           <div class="item-name">
             <div class="item-image"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
             <h4>{{item.name}}</h4>
@@ -857,10 +361,13 @@ test<form class="{{cssClass}} flexcol">
           </div>
         </li>
         {{/each}}
+        {{#unless defects.length}}
+        <li class="item empty">{{localize "BESMD20.DefectsEmpty"}}</li>
+        {{/unless}}
       </ol>
     </div>
 
-    {{!-- Equipment Tab --}}
+    <!-- === Equipment Tab === -->
     <div class="tab" data-group="primary" data-tab="equipment">
       <div class="items-header flexrow">
         <h3>{{localize "BESMD20.Equipment"}}</h3>
@@ -875,14 +382,12 @@ test<form class="{{cssClass}} flexcol">
           <div class="item-controls"></div>
         </li>
         {{#each equipment as |item|}}
-        <li class="item flexrow" data-item-id="{{item.id}}">
+        <li class="item flexrow" data-item-id="{{#if item.id}}{{item.id}}{{else}}{{item._id}}{{/if}}">
           <div class="item-name">
             <div class="item-image"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
             <h4>{{item.name}}</h4>
           </div>
-          <div class="item-rank">
-            <input type="number" name="item.system.quantity" value="{{item.system.quantity}}" data-dtype="Number" disabled/>
-          </div>
+          <div class="item-rank">{{item.system.quantity}}</div>
           <div class="item-cost">{{item.system.weight}}</div>
           <div class="item-cost">{{item.system.cost}}</div>
           <div class="item-controls">
@@ -894,7 +399,7 @@ test<form class="{{cssClass}} flexcol">
       </ol>
     </div>
 
-    {{!-- Biography Tab --}}
+    <!-- === Biography Tab === -->
     <div class="tab" data-group="primary" data-tab="bio">
       <h3>{{localize "BESMD20.Biography"}}</h3>
       {{editor system.biography target="system.biography" button=true editable=editable}}

@@ -126,18 +126,6 @@ Hooks.once("init", async function() {
   CONFIG.Actor.documentClass = BESMActor;
   CONFIG.Item.documentClass = BESMItem;
 
-  // Register custom Handlebars helper for safe number formatting
-  Handlebars.registerHelper('signedNumber', function(value) {
-    const num = Number(value) || 0;
-    return num >= 0 ? `+${num}` : `${num}`;
-  });
-
-  // Register helper to ensure number inputs always have valid values
-  Handlebars.registerHelper('numberValue', function(value) {
-    const num = Number(value);
-    return isNaN(num) ? 0 : num;
-  });
-
   // Register sheet application classes
   Actors.unregisterSheet("core", ActorSheet);
   Actors.registerSheet("besm-d20", BESMActorSheet, { 
