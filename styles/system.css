@@ -1,0 +1,1182 @@
+.besm .skill-spec-row .skill-specs {
+  margin: 0.25rem 0;
+}
+.besm .skill-spec-row .specs-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 600;
+  cursor: pointer;
+}
+.besm .skill-spec-row .specs-header .skill-spec-add {
+  font-weight: normal;
+}
+.besm .skill-spec-row .specs-table {
+  width: 100%;
+  margin-top: 0.25rem;
+}
+.besm .skill-spec-row .specs-table th,
+.besm .skill-spec-row .specs-table td {
+  padding: 2px 4px;
+}
+/* Collapse by default; toggled open adds .open on container */
+.besm .skill-specs:not(.open) .specs-table {
+  display: none;
+}
+
+/* ===== BESM d20 System Styles ===== */
+
+/* ===== BASE LAYOUT ===== */
+.besm {
+  font-family: "Signika", sans-serif;
+  font-size: 12px; /* Compact base font */
+}
+
+.besm .window-content {
+  height: 100%;
+  padding: 4px;
+  overflow-y: hidden;
+}
+
+/* Ensure the sheet form fills the window for proper flex sizing */
+.besm .window-content > form {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.besm .sheet-header {
+  flex: 0 0 90px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  align-items: flex-start;
+  margin-bottom: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+.besm .sheet-header .profile {
+  flex: 0 0 64px;
+  height: 64px;
+  margin-right: 8px;
+}
+
+.besm .sheet-header .header-fields {
+  flex: 1;
+}
+
+.besm .sheet-header h1 {
+  flex: 1;
+  margin: 0;
+  border-bottom: 0;
+}
+
+.besm .sheet-header h1 input {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  border: none;
+  font-size: 1.25em;
+  color: var(--color-text-dark-primary);
+}
+
+.besm .header-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.besm .meta-field {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  background: rgba(0, 0, 0, 0.03);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 3px;
+  padding: 4px;
+}
+
+.besm .meta-field label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  color: var(--color-text-dark-secondary);
+}
+
+.besm .meta-value {
+  font-weight: bold;
+}
+
+.besm .meta-split {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* ===== RESOURCES ===== */
+.besm .resource-row {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.besm .resource {
+  flex: 1;
+  text-align: center;
+}
+
+.besm .resource label {
+  display: block;
+  font-weight: bold;
+  font-size: 0.8em;
+  text-transform: uppercase;
+  margin-bottom: 2px;
+}
+
+.besm .resource-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
+
+.besm .resource input {
+  width: 50px;
+  text-align: center;
+  border: 1px solid #7a7971;
+  height: 24px;
+}
+
+/* ===== TABS ===== */
+.besm .tabs {
+  height: 32px;
+  border-top: 1px solid var(--color-border-light-tertiary);
+  border-bottom: 1px solid var(--color-border-light-tertiary);
+}
+
+.besm .tabs .item {
+  line-height: 32px;
+  font-weight: bold;
+}
+
+.besm .tabs .item.active {
+  text-decoration: underline;
+  text-shadow: none;
+}
+
+/* Force navigation tabs to be compact */
+.besm nav.sheet-tabs.tabs {
+  height: 32px !important;
+  min-height: 32px !important;
+  max-height: 32px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  line-height: 32px !important;
+}
+
+.besm nav.sheet-tabs.tabs .item {
+  height: 32px !important;
+  line-height: 32px !important;
+  padding: 0 10px !important;
+}
+
+.besm .sheet-body {
+  padding: 0 !important;
+  overflow: hidden; /* Let the active tab handle scrolling */
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+/* Reduce nav-to-content gap */
+.besm .sheet-tabs.tabs {
+  margin-bottom: 0 !important;
+  padding-bottom: 0 !important;
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+
+/* Tighten top padding on content wrapper */
+.besm .sheet-body.content {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+/* Force section element to have no spacing */
+.besm section.sheet-body.content.flexcol {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+/* Tighten top spacing inside tab content */
+.besm .sheet-body .tab {
+  padding-top: 0 !important;
+  margin-top: 0 !important;
+  padding: 0 !important;
+}
+
+/* Explicitly normalize top spacing for specific tabs */
+.besm .sheet-body .tab[data-tab="powers"],
+.besm .sheet-body .tab[data-tab="attributes"],
+.besm .sheet-body .tab[data-tab="defects"],
+.besm .sheet-body .tab[data-tab="equipment"],
+.besm .sheet-body .tab[data-tab="bio"] {
+  padding-top: 0 !important;
+  margin-top: 0 !important;
+  padding: 0 !important;
+}
+
+/* Force active tabs to have no offset */
+.besm .sheet-body .tab.active {
+  padding: 0 !important;
+  margin: 0 !important;
+  position: relative !important;
+  top: 0 !important;
+  left: 0 !important;
+  transform: none !important;
+}
+
+.besm .sheet-body .tab > *:first-child {
+  margin-top: 0 !important;
+}
+
+/* Ensure headers inside tab content don't create extra top gap */
+.besm .items-header {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+
+/* Also collapse top margins on common first elements within tabs */
+.besm .sheet-body .tab h2:first-child,
+.besm .sheet-body .tab h3:first-child,
+.besm .sheet-body .tab .panel-header:first-child,
+.besm .sheet-body .tab .item-header:first-child,
+.besm .sheet-body .tab .items-header:first-child {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+  margin-block-start: 0 !important;
+  margin-block-end: 0 !important;
+}
+
+/* Force zero top spacing on flexrow headers */
+.besm .items-header.flexrow {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  padding-top: 0 !important;
+}
+
+.besm .items-header.flexrow h3 {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  padding-top: 0 !important;
+}
+
+.besm .item-header {
+  margin-top: 0 !important;
+}
+
+.besm .items-list {
+  margin-top: 0 !important;
+}
+
+.besm .sheet-section {
+  margin-bottom: 10px;
+}
+
+.besm .section-title {
+  font-size: 0.95rem;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.besm .info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 6px;
+}
+
+.besm .form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.besm .form-field label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  color: var(--color-text-dark-secondary);
+}
+
+.besm .form-field input {
+  border: 1px solid #c9c7b8;
+  border-radius: 3px;
+  padding: 3px;
+}
+
+/* Inline form row: label and input side-by-side */
+.besm .form-inline {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.besm .form-inline label {
+  font-size: 0.7rem;
+  text-transform: none; /* preserve exact casing like 'Start lvl.' */
+  color: var(--color-text-dark-secondary);
+  white-space: nowrap;
+}
+
+.besm .form-inline input[type="number"] {
+  width: 70px;
+}
+
+.sheet-body.content {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden; /* use tab as scroll area */
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.sheet-tabs.tabs {
+  margin-bottom: 0 !important;
+}
+
+/* Make each tab fill and scroll */
+.besm .sheet-body .tab {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 0 !important;
+  margin: 0 !important;
+  position: relative !important;
+  top: 0 !important;
+  transform: none !important;
+}
+.besm .class-grid {
+  margin-top: 8px;
+  display: grid;
+  gap: 4px;
+}
+
+.besm .class-row {
+  display: grid;
+  grid-template-columns: 1fr 2fr auto 70px;
+  gap: 4px;
+  align-items: center;
+}
+
+.besm .class-row input {
+  border: 1px solid #c9c7b8;
+  border-radius: 3px;
+  padding: 4px;
+}
+
+.besm .class-level-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  color: var(--color-text-dark-secondary);
+}
+
+/* ===== GRID SYSTEM ===== */
+.besm .grid {
+  display: grid;
+  grid-column-gap: 8px;
+  grid-row-gap: 4px;
+  margin: 4px 0;
+}
+
+.besm .grid-2col {
+  grid-template-columns: 1fr 1fr;
+}
+
+.besm .grid-3col {
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
+.besm .grid-1col {
+  grid-template-columns: 1fr;
+}
+
+/* ===== TOP SECTION 3-COLUMN LAYOUT ===== */
+.besm .top-section {
+  gap: 10px;
+  align-items: start;
+}
+
+.besm .char-info-panel,
+.besm .abilities-panel,
+.besm .calculated-panel {
+  height: 100%;
+}
+
+.besm .class-row-compact {
+  display: grid;
+  grid-template-columns: auto 1fr auto auto;
+  gap: 3px;
+  align-items: center;
+  margin-bottom: 3px;
+}
+
+.besm .class-row-compact label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+}
+
+.besm .class-row-compact input[type="text"] {
+  min-width: 0;
+}
+
+.besm .class-row-compact input[type="number"] {
+  width: 40px;
+}
+
+.besm .subsection-title {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  margin: 6px 0 4px 0;
+}
+
+.besm .combat-summary {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 6px;
+}
+
+.besm .combat-summary td {
+  border: 1px solid #c9c7b8;
+  padding: 3px;
+}
+
+.besm .combat-summary td:first-child {
+  text-align: left;
+  font-weight: bold;
+  width: 60%;
+}
+
+.besm .combat-summary td:last-child {
+  text-align: center;
+  width: 40%;
+}
+
+.besm .combat-summary input {
+  width: 100%;
+  text-align: center;
+  border: none;
+  background: transparent;
+}
+
+/* ===== ABILITIES ===== */
+.besm .abilities-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.besm .ability {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 2px 0;
+  border-bottom: 1px solid #c9c7b8;
+}
+
+.besm .ability h4 {
+  flex: 2;
+  margin: 0;
+  color: var(--color-text-dark-primary);
+}
+
+.besm .ability-score {
+  flex: 0 0 50px;
+  text-align: center;
+  margin-left: 10px;
+}
+
+.besm .ability-modifier {
+  flex: 0 0 40px;
+  text-align: center;
+  border: 1px solid #7a7971;
+  height: 28px;
+  line-height: 28px;
+  background: rgba(0, 0, 0, 0.05);
+  margin-left: 10px;
+  cursor: pointer;
+}
+
+.besm .ability-modifier:hover {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.besm .ability-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 6px;
+}
+
+.besm .ability-table th,
+.besm .ability-table td {
+  border: 1px solid #c9c7b8;
+  padding: 3px;
+  text-align: center;
+}
+
+.besm .ability-table th {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.besm .panel {
+  background: rgba(255, 255, 255, 0.4);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 6px;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.besm .panel-title {
+  margin: 0;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+}
+
+.besm .panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.besm .panel-controls {
+  display: flex;
+  gap: 4px;
+}
+
+.besm .panel-controls .item-control {
+  padding: 2px 6px;
+  border: 1px solid #7a7971;
+  border-radius: 4px;
+}
+
+.besm .trait-grid {
+  gap: 8px;
+}
+
+.besm .skills-summary {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.besm .skills-summary th,
+.besm .skills-summary td {
+  border: 1px solid #c9c7b8;
+  padding: 3px;
+  text-align: center;
+}
+
+.besm .skills-summary th {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.besm .skills-title {
+  margin-top: 8px;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+}
+
+.besm .sheet-section textarea {
+  width: 100%;
+  min-height: 140px;
+  border: 1px solid #c9c7b8;
+  border-radius: 4px;
+  padding: 5px;
+  resize: vertical;
+}
+
+.besm .skills-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.besm .skills-table th,
+.besm .skills-table td {
+  border: 1px solid #c9c7b8;
+  padding: 3px;
+  text-align: center;
+}
+
+.besm .skills-table th {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+/* Skill name with chips and toggle */
+.besm .skill-name-cell {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.besm .skill-spec-toggle {
+  color: var(--color-text-dark-5);
+}
+
+.besm .skill-name {
+  color: var(--color-text-dark-primary);
+  cursor: pointer;
+  text-decoration: none;
+}
+.besm .skill-name:hover {
+  text-shadow: 0 0 8px red;
+}
+
+.besm .skill-spec-toggle .fa-chevron-right {
+  transition: transform 120ms ease;
+}
+
+.besm .skill-row.open .skill-spec-toggle .fa-chevron-right {
+  transform: rotate(90deg);
+}
+
+.besm .spec-chip-group {
+  display: inline-flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.besm .spec-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0 6px;
+  height: 18px;
+  border-radius: 10px;
+  background: rgba(0,0,0,0.06);
+  border: 1px solid rgba(0,0,0,0.15);
+  font-size: 11px;
+}
+
+.besm .spec-chip.more {
+  opacity: 0.8;
+}
+
+.besm .spec-chip-add {
+  color: var(--color-text-dark-5);
+  cursor: pointer;
+}
+.besm .spec-chip-add:hover {
+  color: var(--color-text-dark-2);
+}
+
+/* Drawer row hidden by default */
+.besm .skill-spec-row {
+  display: none;
+}
+
+.besm .skill-spec-row.open {
+  display: table-row;
+}
+
+/* ===== SKILLS ===== */
+.besm .skills-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.besm .skill {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 2px 0;
+  border-bottom: 1px solid #c9c7b8;
+}
+
+.besm .skill h4 {
+  flex: 2;
+  margin: 0;
+  color: var(--color-text-dark-primary);
+  cursor: pointer;
+}
+
+.besm .skill h4:hover {
+  text-shadow: 0 0 8px red;
+}
+
+.besm .skill-ability {
+  flex: 0 0 80px;
+  margin: 0 5px;
+}
+
+.besm .skill-rank {
+  flex: 0 0 50px;
+  text-align: center;
+  margin: 0 5px;
+}
+
+.besm .skill-mod {
+  flex: 0 0 40px;
+  text-align: center;
+  border: 1px solid #7a7971;
+  height: 28px;
+  line-height: 28px;
+  background: rgba(0, 0, 0, 0.05);
+}
+
+/* ===== ITEMS LISTS ===== */
+.besm .items-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.besm .items-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.besm .items-header h3 {
+  margin: 0;
+}
+
+.besm .item-header {
+  display: flex;
+  font-weight: bold;
+  border-bottom: 2px solid #782e22;
+  background: rgba(0, 0, 0, 0.05);
+  padding: 4px;
+}
+
+.besm .item {
+  display: flex;
+  align-items: center;
+  padding: 2px;
+  border-bottom: 1px solid #c9c7b8;
+}
+
+.besm .item:last-child {
+  border-bottom: none;
+}
+
+.besm .item .item-name {
+  flex: 2;
+  display: flex;
+  align-items: center;
+}
+
+.besm .item .item-image {
+  flex: 0 0 30px;
+  height: 30px;
+  background-size: 30px;
+  border: none;
+  margin-right: 5px;
+}
+
+.besm .item .item-image img {
+  display: block;
+}
+
+.besm .item h4 {
+  margin: 0;
+  cursor: pointer;
+}
+
+.besm .item-rank,
+.besm .item-cost,
+.besm .item-bonus {
+  flex: 0 0 60px;
+  text-align: center;
+}
+
+.besm .item-controls {
+  flex: 0 0 100px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 5px;
+}
+
+/* ===== FORM ELEMENTS ===== */
+.besm .form-group {
+  margin-bottom: 10px;
+}
+
+.besm .form-group label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 2px;
+}
+
+.besm .form-group input,
+.besm .form-group select,
+.besm .form-group textarea {
+  width: 100%;
+  font-family: inherit;
+}
+
+.besm .form-group textarea {
+  resize: vertical;
+  min-height: 60px;
+}
+
+.besm .form-group .checkbox {
+  display: flex;
+  align-items: center;
+  font-weight: normal;
+}
+
+.besm .form-group .checkbox input {
+  width: auto;
+  margin-right: 5px;
+}
+
+/* ===== CONTROLS ===== */
+.besm .item-control {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  line-height: 20px;
+  text-align: center;
+  color: #999;
+  border: 1px solid transparent;
+  cursor: pointer;
+}
+
+.besm .item-control:hover {
+  color: #111;
+  border: 1px solid #111;
+}
+
+.besm .item-create {
+  display: inline-flex;
+  align-items: center;
+  color: var(--color-text-dark-primary);
+  cursor: pointer;
+}
+
+.besm .item-create:hover {
+  text-shadow: 0 0 8px red;
+}
+
+/* ===== ROLLABLE ELEMENTS ===== */
+.besm .rollable:hover {
+  color: #000;
+  text-shadow: 0 0 10px red;
+  cursor: pointer;
+}
+
+/* ===== CHARACTER POINTS ===== */
+.besm .character-points {
+  margin-top: 10px;
+  padding: 10px;
+  border: 1px solid #999;
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.besm .character-points h4 {
+  margin: 0 0 10px 0;
+  text-align: center;
+}
+
+.besm .points-breakdown .flexrow {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 2px;
+}
+
+.besm .points-breakdown .total {
+  border-top: 1px solid #999;
+  padding-top: 5px;
+  margin-top: 5px;
+}
+
+/* ===== DETAILS ===== */
+.besm .details-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.besm .detail {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.besm .detail label {
+  flex: 0 0 120px;
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+.besm .detail input,
+.besm .detail select {
+  flex: 1;
+}
+
+/* ===== EDITOR ===== */
+.besm .editor {
+  height: 100%;
+}
+
+.besm .editor .editor-content {
+  height: calc(100% - 30px);
+}
+
+/* ===== ACTIONS ===== */
+.besm .actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.besm .actions button {
+  padding: 5px 10px;
+  background: var(--color-button);
+  color: var(--color-text-light-primary);
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.besm .actions button:hover {
+  background: var(--color-button-hover);
+}
+
+/* ===== COMPACT MODE TOGGLE ===== */
+.besm .sheet-mode-toggle {
+  padding: 2px 8px !important;
+  margin: 0 !important;
+  text-align: right;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: 24px !important;
+  line-height: 20px !important;
+  overflow: hidden !important;
+}
+
+.besm .sheet-mode-toggle label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  cursor: pointer;
+  user-select: none;
+}
+
+.besm .sheet-mode-toggle input {
+  margin-right: 4px;
+}
+
+/* ===== COMPACT MODE OVERRIDES ===== */
+.besm.compact-mode {
+  font-size: 10px;
+}
+
+.besm.compact-mode .sheet-header {
+  flex: 0 0 70px;
+  margin-bottom: 4px;
+}
+
+.besm.compact-mode .sheet-header .profile {
+  flex: 0 0 48px;
+  height: 48px;
+  margin-right: 6px;
+}
+
+.besm.compact-mode .sheet-header h1 input {
+  font-size: 1.1em;
+}
+
+.besm.compact-mode .header-grid {
+  gap: 4px;
+  margin-top: 4px;
+}
+
+.besm.compact-mode .meta-field {
+  gap: 2px;
+  padding: 3px;
+}
+
+.besm.compact-mode .meta-field label {
+  font-size: 0.65rem;
+}
+
+.besm.compact-mode .tabs {
+  height: 26px;
+}
+
+.besm.compact-mode .tabs .item {
+  line-height: 26px;
+  font-size: 0.9em;
+}
+
+.besm.compact-mode .sheet-body {
+  padding: 6px;
+}
+
+.besm.compact-mode .sheet-section {
+  margin-bottom: 8px;
+}
+
+.besm.compact-mode .section-title {
+  font-size: 0.85rem;
+  margin-bottom: 4px;
+}
+
+.besm.compact-mode .info-grid {
+  gap: 4px;
+}
+
+.besm.compact-mode .form-field {
+  gap: 2px;
+}
+
+.besm.compact-mode .form-field label {
+  font-size: 0.65rem;
+}
+
+.besm.compact-mode .form-field input {
+  padding: 2px;
+}
+
+.besm.compact-mode .class-grid {
+  margin-top: 6px;
+  gap: 3px;
+}
+
+.besm.compact-mode .class-row {
+  gap: 3px;
+}
+
+.besm.compact-mode .ability-table,
+.besm.compact-mode .skills-summary,
+.besm.compact-mode .skills-table {
+  margin-top: 4px;
+}
+
+.besm.compact-mode .ability-table th,
+.besm.compact-mode .ability-table td,
+.besm.compact-mode .skills-summary th,
+.besm.compact-mode .skills-summary td,
+.besm.compact-mode .skills-table th,
+.besm.compact-mode .skills-table td {
+  padding: 2px;
+  font-size: 0.95em;
+}
+
+.besm.compact-mode .panel {
+  padding: 6px;
+  gap: 6px;
+}
+
+.besm.compact-mode .panel-title {
+  font-size: 0.8rem;
+}
+
+.besm.compact-mode .panel-header {
+  margin-bottom: 3px;
+}
+
+.besm.compact-mode .panel-controls {
+  gap: 3px;
+}
+
+.besm.compact-mode .trait-grid {
+  gap: 6px;
+}
+
+.besm.compact-mode .grid {
+  grid-column-gap: 6px;
+  grid-row-gap: 3px;
+  margin: 3px 0;
+}
+
+.besm.compact-mode .item-header {
+  padding: 3px;
+  font-size: 0.9em;
+}
+
+.besm.compact-mode .item {
+  padding: 1px;
+}
+
+.besm.compact-mode .items-header {
+  margin-bottom: 3px;
+}
+
+.besm.compact-mode .sheet-section textarea {
+  min-height: 100px;
+  padding: 4px;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 600px) {
+  .besm .grid-2col {
+    grid-template-columns: 1fr;
+  }
+  
+  .besm .sheet-header {
+    flex-direction: column;
+  }
+  
+  .besm .resource-row {
+    flex-direction: column;
+    gap: 5px;
+  }
+}
+
+/* ===== SPECIALIZATIONS: INLINE PILL LAYOUT ===== */
+.besm .skill-specs.pill-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  align-items: center;
+}
+
+.besm .skill-specs .skill-spec-add {
+  color: var(--color-text-dark-5);
+  font-size: 12px;
+  margin-left: 2px;
+  white-space: nowrap;
+}
+
+.besm .spec-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 6px;
+  border-radius: 12px;
+  background: var(--color-border-light-1);
+  border: 1px solid var(--color-border);
+}
+
+.besm .spec-pill .spec-name {
+  border: none;
+  background: transparent;
+  width: 120px;
+  padding: 0 2px;
+}
+
+.besm .spec-pill .spec-bonus {
+  width: 42px;
+  text-align: center;
+  padding: 0 2px;
+}
+
+.besm .spec-pill .plus {
+  font-weight: 600;
+  opacity: 0.8;
+}
+
+.besm .spec-pill a {
+  color: var(--color-text-dark-6);
+}

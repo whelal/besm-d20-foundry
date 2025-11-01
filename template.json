@@ -1,0 +1,261 @@
+{
+  "Actor": {
+    "types": [
+      "character",
+      "npc"
+    ],
+    "character": {
+      "abilities": {
+        "str": {
+          "value": 10,
+          "mod": 0
+        },
+        "dex": {
+          "value": 10,
+          "mod": 0
+        },
+        "con": {
+          "value": 10,
+          "mod": 0
+        },
+        "int": {
+          "value": 10,
+          "mod": 0
+        },
+        "wis": {
+          "value": 10,
+          "mod": 0
+        },
+        "cha": {
+          "value": 10,
+          "mod": 0
+        }
+      },
+      "skills": {
+        "balance": { "rank": 0, "ability": "dex", "abilityMod": 0, "raceFeat": 0, "misc": 0, "total": 0, "specializations": [] },
+        "bluff": { "rank": 0, "ability": "cha", "abilityMod": 0, "raceFeat": 0, "misc": 0, "total": 0, "specializations": [] },
+        "climb": { "rank": 0, "ability": "str", "abilityMod": 0, "raceFeat": 0, "misc": 0, "total": 0, "specializations": [] },
+        "concentration": { "rank": 0, "ability": "con", "abilityMod": 0, "raceFeat": 0, "misc": 0, "total": 0, "specializations": [] },
+        "computerUse": { "rank": 0, "ability": "int", "abilityMod": 0, "raceFeat": 0, "misc": 0, "total": 0, "specializations": [] },
+        "craft": { "rank": 0, "ability": "int", "abilityMod": 0, "raceFeat": 0, "misc": 0, "total": 0, "specializations": [] },
+        "decipherScript": { "rank": 0, "ability": "int", "abilityMod": 0, "raceFeat": 0, "misc": 0, "total": 0, "specializations": [] },
+        "diplomacy": { "rank": 0, "ability": "cha", "abilityMod": 0, "raceFeat": 0, "misc": 0, "total": 0, "specializations": [] },
+        "disableDevice": { "rank": 0, "ability": "int", "abilityMod": 0, "raceFeat": 0, "misc": 0, "total": 0, "specializations": [] },
+        "disguise": { "rank": 0, "ability": "cha", "abilityMod": 0, "raceFeat": 0, "misc": 0, "total": 0, "specializations": [] },
+        "drive": { "rank": 0, "ability": "dex", "abilityMod": 0, "raceFeat": 0, "misc": 0, "total": 0, "specializations": [] },
+        "escapeArtist": { "rank": 0, "ability": "dex", "abilityMod": 0, "raceFeat": 0, "misc": 0, "total": 0, "specializations": [] },
+        "forgery": { "rank": 0, "ability": "int", "abilityMod": 0, "raceFeat": 0, "misc": 0, "total": 0, "specializations": [] },
+        "gamble": { "rank": 0, "ability": "wis", "abilityMod": 0, "raceFeat": 0, "misc": 0, "total": 0, "specializations": [] },
+        "gatherInformation": { "rank": 0, "ability": "cha", "abilityMod": 0, "raceFeat": 0, "misc": 0, "total": 0, "specializations": [] },
+        "handleAnimal": { "rank": 0, "ability": "cha", "abilityMod": 0, "raceFeat": 0, "misc": 0, "total": 0, "specializations": [] },
+        "hide": { "rank": 0, "ability": "dex", "abilityMod": 0, "raceFeat": 0, "misc": 0, "total": 0, "specializations": [] },
+        "intimidate": { "rank": 0, "ability": "cha", "abilityMod": 0, "raceFeat": 0, "misc": 0, "total": 0, "specializations": [] },
+        "investigate": { "rank": 0, "ability": "int", "abilityMod": 0, "raceFeat": 0, "misc": 0, "total": 0, "specializations": [] },
+        "jump": { "rank": 0, "ability": "str", "abilityMod": 0, "raceFeat": 0, "misc": 0, "total": 0, "specializations": [] },
+        "knowledge": { "rank": 0, "ability": "int", "abilityMod": 0, "raceFeat": 0, "misc": 0, "total": 0, "specializations": [] },
+        "listen": { "rank": 0, "ability": "wis", "abilityMod": 0, "raceFeat": 0, "misc": 0, "total": 0, "specializations": [] },
+        "moveSilently": { "rank": 0, "ability": "dex", "abilityMod": 0, "raceFeat": 0, "misc": 0, "total": 0, "specializations": [] },
+        "perform": { "rank": 0, "ability": "cha", "abilityMod": 0, "raceFeat": 0, "misc": 0, "total": 0, "specializations": [] },
+        "pilot": { "rank": 0, "ability": "dex", "abilityMod": 0, "raceFeat": 0, "misc": 0, "total": 0, "specializations": [] },
+        "poisons": { "rank": 0, "ability": "int", "abilityMod": 0, "raceFeat": 0, "misc": 0, "total": 0, "specializations": [] },
+        "powerUsage": { "rank": 0, "ability": "int", "abilityMod": 0, "raceFeat": 0, "misc": 0, "total": 0, "specializations": [] },
+        "powerlifting": { "rank": 0, "ability": "str", "abilityMod": 0, "raceFeat": 0, "misc": 0, "total": 0, "specializations": [] },
+        "profession": { "rank": 0, "ability": "wis", "abilityMod": 0, "raceFeat": 0, "misc": 0, "total": 0, "specializations": [] },
+        "readLips": { "rank": 0, "ability": "int", "abilityMod": 0, "raceFeat": 0, "misc": 0, "total": 0, "specializations": [] },
+        "repair": { "rank": 0, "ability": "int", "abilityMod": 0, "raceFeat": 0, "misc": 0, "total": 0, "specializations": [] },
+        "research": { "rank": 0, "ability": "int", "abilityMod": 0, "raceFeat": 0, "misc": 0, "total": 0, "specializations": [] },
+        "ride": { "rank": 0, "ability": "dex", "abilityMod": 0, "raceFeat": 0, "misc": 0, "total": 0, "specializations": [] },
+        "search": { "rank": 0, "ability": "int", "abilityMod": 0, "raceFeat": 0, "misc": 0, "total": 0, "specializations": [] },
+        "seduction": { "rank": 0, "ability": "cha", "abilityMod": 0, "raceFeat": 0, "misc": 0, "total": 0, "specializations": [] },
+        "senseMotive": { "rank": 0, "ability": "wis", "abilityMod": 0, "raceFeat": 0, "misc": 0, "total": 0, "specializations": [] },
+        "spot": { "rank": 0, "ability": "wis", "abilityMod": 0, "raceFeat": 0, "misc": 0, "total": 0, "specializations": [] },
+        "survival": { "rank": 0, "ability": "wis", "abilityMod": 0, "raceFeat": 0, "misc": 0, "total": 0, "specializations": [] },
+        "swim": { "rank": 0, "ability": "str", "abilityMod": 0, "raceFeat": 0, "misc": 0, "total": 0, "specializations": [] },
+        "tumble": { "rank": 0, "ability": "dex", "abilityMod": 0, "raceFeat": 0, "misc": 0, "total": 0, "specializations": [] },
+        "useRope": { "rank": 0, "ability": "dex", "abilityMod": 0, "raceFeat": 0, "misc": 0, "total": 0, "specializations": [] },
+        "wildernessTracking": { "rank": 0, "ability": "int", "abilityMod": 0, "raceFeat": 0, "misc": 0, "total": 0, "specializations": [] }
+      },
+      "details": {
+        "playerName": "",
+        "gmName": "",
+        "campaign": "",
+        "startingLevel": 1,
+        "discretionaryPoints": 0,
+        "race": "",
+  "raceCost": 0,
+        "size": "",
+        "age": "",
+        "height": "",
+        "weight": "",
+        "gender": "",
+        "appearance": ""
+      },
+      "classes": [
+        {
+          "name": "",
+          "level": 1
+        },
+        {
+          "name": "",
+          "level": 0
+        },
+        {
+          "name": "",
+          "level": 0
+        }
+      ],
+      "health": {
+        "value": 10,
+        "max": 10
+      },
+      "energy": {
+        "value": 20,
+        "max": 20
+      },
+      "defense": {
+        "value": 10
+      },
+      "armor": {
+        "value": 0
+      },
+      "movement": {
+        "base": 30,
+        "misc": 0,
+        "total": 30
+      },
+      "saves": {
+        "fortitude": {
+          "base": 0,
+          "misc": 0,
+          "abilityMod": 0,
+          "total": 0
+        },
+        "reflex": {
+          "base": 0,
+          "misc": 0,
+          "abilityMod": 0,
+          "total": 0
+        },
+        "will": {
+          "base": 0,
+          "misc": 0,
+          "abilityMod": 0,
+          "total": 0
+        }
+      },
+      "combat": {
+        "baseAttackBonus": 0,
+        "meleeMisc": 0,
+        "rangedMisc": 0,
+        "initiativeMisc": 0,
+        "defenseMisc": 0,
+        "meleeTotal": 0,
+        "rangedTotal": 0,
+        "initiativeTotal": 0,
+        "shockValue": 0
+      },
+      "level": 1,
+      "experience": 0,
+      "biography": "",
+      "notes": ""
+    },
+    "npc": {
+      "abilities": {
+        "str": {
+          "value": 10,
+          "mod": 0
+        },
+        "dex": {
+          "value": 10,
+          "mod": 0
+        },
+        "con": {
+          "value": 10,
+          "mod": 0
+        },
+        "int": {
+          "value": 10,
+          "mod": 0
+        },
+        "wis": {
+          "value": 10,
+          "mod": 0
+        },
+        "cha": {
+          "value": 10,
+          "mod": 0
+        }
+      },
+      "health": {
+        "value": 10,
+        "max": 10
+      },
+      "energy": {
+        "value": 20,
+        "max": 20
+      },
+      "defense": {
+        "value": 10
+      },
+      "cr": 1,
+      "type": "minion",
+      "biography": "",
+      "notes": ""
+    }
+  },
+  "Item": {
+    "types": [
+      "power",
+      "attribute", 
+      "defect",
+      "skill",
+      "equipment"
+    ],
+    "power": {
+      "powerType": "attack",
+      "rank": 1,
+      "baseCost": 1,
+      "totalCost": 1,
+      "energyCost": 0,
+      "range": "",
+      "area": "",
+      "duration": "",
+      "damageFormula": "",
+      "attackBonus": 0,
+      "defenseType": "physical",
+      "resistible": false,
+      "modifiers": [],
+      "notes": "",
+      "description": ""
+    },
+    "attribute": {
+      "rank": 1,
+      "baseCost": 1,
+      "totalCost": 1,
+      "notes": "",
+      "description": ""
+    },
+    "defect": {
+      "rank": 1,
+      "bonusValue": 1,
+      "totalBonus": 1,
+      "notes": "",
+      "description": ""
+    },
+    "skill": {
+      "rank": 0,
+      "ability": "int",
+      "specialization": "",
+      "notes": "",
+      "description": ""
+    },
+    "equipment": {
+      "quantity": 1,
+      "weight": 0,
+      "cost": 0,
+      "equipped": false,
+      "notes": "",
+      "description": ""
+    }
+  }
+}

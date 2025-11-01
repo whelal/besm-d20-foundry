@@ -1,0 +1,43 @@
+<form class="{{cssClass}} flexcol">
+  {{!-- Sheet Header --}}
+  <header class="sheet-header flexrow">
+    <img class="profile" src="{{item.img}}" data-edit="img" title="{{item.name}}" height="80" width="80"/>
+    <div class="header-fields flexcol">
+      <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="{{localize 'BESMD20.AttributeName'}}"/></h1>
+    </div>
+  </header>
+
+  {{!-- Sheet Body --}}
+  <section class="sheet-body">
+    <div class="grid grid-2col">
+      <div class="details-left">
+        <div class="form-group">
+          <label>{{localize "BESMD20.Rank"}}</label>
+          <input type="number" name="system.rank" value="{{system.rank}}" data-dtype="Number"/>
+        </div>
+
+        <div class="form-group">
+          <label>{{localize "BESMD20.BaseCost"}}</label>
+          <input type="number" name="system.baseCost" value="{{system.baseCost}}" data-dtype="Number"/>
+        </div>
+
+        <div class="form-group">
+          <label>{{localize "BESMD20.TotalCost"}}</label>
+          <input type="number" name="system.totalCost" value="{{system.totalCost}}" data-dtype="Number" readonly/>
+        </div>
+      </div>
+
+      <div class="details-right">
+        <div class="form-group">
+          <label>{{localize "BESMD20.Notes"}}</label>
+          <textarea name="system.notes" rows="4">{{system.notes}}</textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>{{localize "BESMD20.Description"}}</label>
+      {{editor system.description target="system.description" button=true editable=editable}}
+    </div>
+  </section>
+</form>

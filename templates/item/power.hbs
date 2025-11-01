@@ -1,0 +1,141 @@
+
+<form class="{{cssClass}} flexcol">
+  {{!-- Sheet Header --}}
+  <header class="sheet-header flexrow">
+    <img class="profile" src="{{item.img}}" data-edit="img" title="{{item.name}}" height="80" width="80"/>
+    <div class="header-fields flexcol">
+      <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="{{localize 'BESMD20.PowerName'}}"/></h1>
+    </div>
+  </header>
+
+  {{!-- Sheet Tab Navigation --}}
+  <nav class="sheet-tabs tabs" data-group="primary">
+    <a class="item" data-tab="description">{{localize "BESMD20.TabDescription"}}</a>
+    <a class="item" data-tab="details">{{localize "BESMD20.TabDetails"}}</a>
+    <a class="item" data-tab="mechanics">{{localize "BESMD20.TabMechanics"}}</a>
+  </nav>
+
+  {{!-- Sheet Body --}}
+  <section class="sheet-body">
+    {{!-- Description Tab --}}
+    <div class="tab" data-group="primary" data-tab="description">
+      <div class="editor">
+        <label>{{localize "BESMD20.Description"}}</label>
+        {{editor system.description target="system.description" button=true editable=editable}}
+      </div>
+    </div>
+
+    {{!-- Details Tab --}}
+    <div class="tab" data-group="primary" data-tab="details">
+      <div class="grid grid-2col">
+        <div class="details-left">
+          <div class="form-group">
+            <label>{{localize "BESMD20.PowerType"}}</label>
+            <select name="system.powerType">
+              {{#each config.powerTypes as |typeName typeKey|}}
+              <option value="{{typeKey}}" {{#if (eq system.powerType typeKey)}}selected{{/if}}>{{localize typeName}}</option>
+              {{/each}}
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label>{{localize "BESMD20.Rank"}}</label>
+            <input type="number" name="system.rank" value="{{system.rank}}" data-dtype="Number"/>
+          </div>
+
+          <div class="form-group">
+            <label>{{localize "BESMD20.BaseCost"}}</label>
+            <input type="number" name="system.baseCost" value="{{system.baseCost}}" data-dtype="Number"/>
+          </div>
+
+          <div class="form-group">
+            <label>{{localize "BESMD20.TotalCost"}}</label>
+            <input type="number" name="system.totalCost" value="{{system.totalCost}}" data-dtype="Number" readonly/>
+          </div>
+
+          <div class="form-group">
+            <label>{{localize "BESMD20.EnergyCost"}}</label>
+            <input type="number" name="system.energyCost" value="{{system.energyCost}}" data-dtype="Number"/>
+          </div>
+        </div>
+
+        <div class="details-right">
+          <div class="form-group">
+            <label>{{localize "BESMD20.Range"}}</label>
+            <input type="text" name="system.range" value="{{system.range}}"/>
+          </div>
+
+          <div class="form-group">
+            <label>{{localize "BESMD20.Area"}}</label>
+            <input type="text" name="system.area" value="{{system.area}}"/>
+          </div>
+
+          <div class="form-group">
+            <label>{{localize "BESMD20.Duration"}}</label>
+            <input type="text" name="system.duration" value="{{system.duration}}"/>
+          </div>
+
+          <div class="form-group">
+            <label>{{localize "BESMD20.DefenseType"}}</label>
+            <select name="system.defenseType">
+              <option value="physical" {{#if (eq system.defenseType "physical")}}selected{{/if}}>{{localize "BESMD20.DefenseTypePhysical"}}</option>
+              <option value="mental" {{#if (eq system.defenseType "mental")}}selected{{/if}}>{{localize "BESMD20.DefenseTypeMental"}}</option>
+              <option value="soul" {{#if (eq system.defenseType "soul")}}selected{{/if}}>{{localize "BESMD20.DefenseTypeSoul"}}</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="checkbox">
+              <input type="checkbox" name="system.resistible" {{checked system.resistible}}/>
+              {{localize "BESMD20.Resistible"}}
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>{{localize "BESMD20.Notes"}}</label>
+        <textarea name="system.notes" rows="3">{{system.notes}}</textarea>
+      </div>
+    </div>
+
+    {{!-- Mechanics Tab --}}
+    <div class="tab" data-group="primary" data-tab="mechanics">
+      <div class="grid grid-2col">
+        <div class="mechanics-left">
+          <div class="form-group">
+            <label>{{localize "BESMD20.DamageFormula"}}</label>
+            <input type="text" name="system.damageFormula" value="{{system.damageFormula}}" placeholder="1d6+2"/>
+          </div>
+
+          <div class="form-group">
+            <label>{{localize "BESMD20.AttackBonus"}}</label>
+            <input type="number" name="system.attackBonus" value="{{system.attackBonus}}" data-dtype="Number"/>
+          </div>
+
+          <div class="actions">
+            {{#if system.damageFormula}}
+            <button type="button" class="rollable" data-roll-type="damage">
+              <i class="fas fa-dice-d20"></i> {{localize "BESMD20.RollDamage"}}
+            </button>
+            {{/if}}
+            <button type="button" class="rollable" data-roll-type="activate">
+              <i class="fas fa-magic"></i> {{localize "BESMD20.Activate"}}
+            </button>
+          </div>
+        </div>
+
+        <div class="mechanics-right">
+          <div class="form-group">
+            <label>{{localize "BESMD20.PowerModifiers"}}</label>
+            <div class="modifiers-list">
+              {{!-- TODO: Implement modifier system --}}
+              <p class="notes">{{localize "BESMD20.ModifiersComingSoon"}}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </section>
+</form>

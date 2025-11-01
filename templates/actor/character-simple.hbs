@@ -1,0 +1,91 @@
+<form class="{{cssClass}} flexcol">
+  {{!-- Sheet Header --}}
+  <header class="sheet-header flexrow">
+    <img class="profile" src="{{actor.img}}" data-edit="img" title="{{actor.name}}" height="80" width="80"/>
+    <div class="header-fields flexcol">
+      <h1 class="charname">
+        <input name="name" type="text" value="{{actor.name}}" placeholder="{{localize 'BESMD20.CharacterName'}}"/>
+      </h1>
+      <div class="resource flexrow">
+        <label>{{localize "BESMD20.CharacterPoints"}}:</label>
+        <span class="resource-value">{{characterPoints.total}}</span>
+      </div>
+    </div>
+  </header>
+
+  {{!-- Sheet Tab Navigation --}}
+  <nav class="sheet-tabs tabs" data-group="primary">
+    <a class="item" data-tab="stats">{{localize "BESMD20.Abilities"}}</a>
+    <a class="item" data-tab="items">{{localize "BESMD20.Items"}}</a>
+  </nav>
+
+  {{!-- Sheet Body --}}
+  <section class="sheet-body content">
+    {{!-- Stats Tab --}}
+    <div class="tab stats" data-group="primary" data-tab="stats">
+      <h2>{{localize "BESMD20.Abilities"}}</h2>
+      <table class="ability-table">
+        <thead>
+          <tr>
+            <th>{{localize "BESMD20.Name"}}</th>
+            <th>{{localize "BESMD20.Score"}}</th>
+            <th>{{localize "BESMD20.Modifier"}}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>{{localize "BESMD20.AbilityStr"}}</td>
+            <td><input type="number" name="system.abilities.str.value" value="{{system.abilities.str.value}}" data-dtype="Number"/></td>
+            <td>{{numberFormat system.abilities.str.mod decimals=0 sign=true}}</td>
+          </tr>
+          <tr>
+            <td>{{localize "BESMD20.AbilityDex"}}</td>
+            <td><input type="number" name="system.abilities.dex.value" value="{{system.abilities.dex.value}}" data-dtype="Number"/></td>
+            <td>{{numberFormat system.abilities.dex.mod decimals=0 sign=true}}</td>
+          </tr>
+          <tr>
+            <td>{{localize "BESMD20.AbilityCon"}}</td>
+            <td><input type="number" name="system.abilities.con.value" value="{{system.abilities.con.value}}" data-dtype="Number"/></td>
+            <td>{{numberFormat system.abilities.con.mod decimals=0 sign=true}}</td>
+          </tr>
+          <tr>
+            <td>{{localize "BESMD20.AbilityInt"}}</td>
+            <td><input type="number" name="system.abilities.int.value" value="{{system.abilities.int.value}}" data-dtype="Number"/></td>
+            <td>{{numberFormat system.abilities.int.mod decimals=0 sign=true}}</td>
+          </tr>
+          <tr>
+            <td>{{localize "BESMD20.AbilityWis"}}</td>
+            <td><input type="number" name="system.abilities.wis.value" value="{{system.abilities.wis.value}}" data-dtype="Number"/></td>
+            <td>{{numberFormat system.abilities.wis.mod decimals=0 sign=true}}</td>
+          </tr>
+          <tr>
+            <td>{{localize "BESMD20.AbilityCha"}}</td>
+            <td><input type="number" name="system.abilities.cha.value" value="{{system.abilities.cha.value}}" data-dtype="Number"/></td>
+            <td>{{numberFormat system.abilities.cha.mod decimals=0 sign=true}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    {{!-- Items Tab --}}
+    <div class="tab items" data-group="primary" data-tab="items">
+      <h2>{{localize "BESMD20.Powers"}}</h2>
+      <ol class="items-list">
+        {{#each powers as |item id|}}
+        <li class="item flexrow" data-item-id="{{item.id}}">
+          <div class="item-name flexrow">
+            <div class="item-image"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
+            <h4>{{item.name}}</h4>
+          </div>
+          <div class="item-controls">
+            <a class="item-control item-edit" title="{{localize 'BESMD20.ItemEdit'}}"><i class="fas fa-edit"></i></a>
+            <a class="item-control item-delete" title="{{localize 'BESMD20.ItemDelete'}}"><i class="fas fa-trash"></i></a>
+          </div>
+        </li>
+        {{else}}
+        <li class="item empty">{{localize "BESMD20.PowersEmpty"}}</li>
+        {{/each}}
+      </ol>
+    </div>
+  </section>
+</form>
