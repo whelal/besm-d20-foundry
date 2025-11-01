@@ -31,17 +31,8 @@
     }
   ],
   "documentTypes": {
-    "Actor": {
-      "character": {},
-      "npc": {}
-    },
-    "Item": {
-      "power": {},
-      "attribute": {},
-      "defect": {},
-      "skill": {},
-      "equipment": {}
-    }
+    "Actor": ["character", "npc"],
+    "Item": ["power", "attribute", "defect", "skill", "equipment"]
   },
   "packs": [],
   "initiative": "1d20 + @abilities.dex.mod",
