@@ -10,14 +10,16 @@ export class BESMActor extends Actor {
 
   /** @override */
   _onUpdate(data, options, userId) {
-    // If render: false was explicitly set, don't trigger sheet re-renders
+    // If render: false was explicitly set, skip the parent's render behavior
     if (options.render === false) {
       console.log('[BESM DEBUG] _onUpdate with render:false, skipping auto-render');
-      // Call parent's parent to skip the render call in _onUpdate
-      Document.prototype._onUpdate.call(this, data, options, userId);
+      // Call prepareDerivedData and other update logic without rendering sheets
+      this.prepareData();
+      // Emit any necessary hooks without rendering
+      Hooks.callAll('updateActor', this, data, options, userId);
       return;
     }
-    // Otherwise use normal behavior
+    // Otherwise use normal behavior which will render
     console.log('[BESM DEBUG] _onUpdate with normal render behavior');
     super._onUpdate(data, options, userId);
   }
