@@ -1,4 +1,3 @@
-
 /**
  * BESM d20 System for Foundry VTT v13+
  * A comprehensive system for playing Big Eyes Small Mouth d20
@@ -420,12 +419,12 @@ class BESMActorSheet extends ActorSheet {
         const $skillRow = $drawerRow.prev('tr.skill-row');
         key = ($drawerRow.data('skillKey')) || ($skillRow.data('skillKey'));
       }
+      console.log('[BESM DEBUG] .skill-spec-add clicked', { key });
       if (!key) return;
       const k = String(key);
       const skill = this.actor.system?.skills?.[k] ?? {};
       const specs = Array.isArray(skill.specializations) ? skill.specializations : [];
       const updated = specs.concat([{ name: "", bonus: 0 }]);
-      // Update actor but don't re-render the sheet; the new input will be in DOM after the data changes propagate
       await this.actor.update({ [`system.skills.${k}.specializations`]: updated }, { render: false });
       // Ensure drawer and skill row stay open
       const $drawerRow = $target.closest('tr.skill-spec-row');
@@ -443,12 +442,12 @@ class BESMActorSheet extends ActorSheet {
       const $skillRow = $target.closest('tr.skill-row');
       const $drawerRow = $skillRow.next('tr.skill-spec-row');
       const k = (ev.currentTarget?.dataset?.skillKey) || ($skillRow.data('skillKey'));
+      console.log('[BESM DEBUG] .spec-chip-add clicked', { k });
       if (!k) return;
       const key = String(k);
       const skill = this.actor.system?.skills?.[key] ?? {};
       const specs = Array.isArray(skill.specializations) ? skill.specializations : [];
       const updated = specs.concat([{ name: "", bonus: 0 }]);
-      // Update actor without re-rendering
       await this.actor.update({ [`system.skills.${key}.specializations`]: updated }, { render: false });
       // Open the drawer
       if ($drawerRow?.length && $skillRow?.length) {
