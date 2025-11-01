@@ -401,10 +401,8 @@ class BESMActorSheet extends ActorSheet {
 
     // Skill Specializations: add
     html.find('.skill-spec-add').click(async ev => {
-      // Save any in-progress edits before updating arrays and re-rendering
-      await this._onSubmit(ev);
+      ev.preventDefault();
       const $target = $(ev.currentTarget);
-      // Prefer dataset, but fall back to DOM adjacency to resolve the key robustly
       let key = ev.currentTarget?.dataset?.skillKey;
       if (!key) {
         const $drawerRow = $target.closest('tr.skill-spec-row');
@@ -416,22 +414,20 @@ class BESMActorSheet extends ActorSheet {
       const skill = this.actor.system?.skills?.[k] ?? {};
       const specs = Array.isArray(skill.specializations) ? skill.specializations : [];
       const updated = specs.concat([{ name: "", bonus: 0 }]);
-      await this.actor.update({ [`system.skills.${k}.specializations`]: updated });
-      // Keep the drawer open after update if present in current DOM
+      // Update actor but don't re-render the sheet; the new input will be in DOM after the data changes propagate
+      await this.actor.update({ [`system.skills.${k}.specializations`]: updated }, { render: false });
+      // Ensure drawer and skill row stay open
       const $drawerRow = $target.closest('tr.skill-spec-row');
       const $skillRow = $drawerRow.prev('tr.skill-row');
       if ($drawerRow?.length && $skillRow?.length) {
         $drawerRow.addClass('open');
         $skillRow.addClass('open');
       }
-      this.render(false);
     });
 
     // Inline chip: add and open drawer
     html.find('.spec-chip-add').click(async ev => {
       ev.preventDefault();
-      // Save any in-progress edits before updating arrays and re-rendering
-      await this._onSubmit(ev);
       const $target = $(ev.currentTarget);
       const $skillRow = $target.closest('tr.skill-row');
       const $drawerRow = $skillRow.next('tr.skill-spec-row');
@@ -441,14 +437,13 @@ class BESMActorSheet extends ActorSheet {
       const skill = this.actor.system?.skills?.[key] ?? {};
       const specs = Array.isArray(skill.specializations) ? skill.specializations : [];
       const updated = specs.concat([{ name: "", bonus: 0 }]);
-      await this.actor.update({ [`system.skills.${key}.specializations`]: updated });
-      // Open the drawer after update (using DOM adjacency for robustness)
+      // Update actor without re-rendering
+      await this.actor.update({ [`system.skills.${key}.specializations`]: updated }, { render: false });
+      // Open the drawer
       if ($drawerRow?.length && $skillRow?.length) {
         $drawerRow.addClass('open');
         $skillRow.addClass('open');
       }
-      // Re-render to reveal new inputs
-      this.render(false);
     });
 
     // Persist specialization Name on input (keystroke) for reliability
@@ -457,7 +452,8 @@ class BESMActorSheet extends ActorSheet {
       const path = el.name;
       if (!path) return;
       const value = String(el.value ?? '');
-      await this.actor.update({ [path]: value });
+      // Update without re-rendering to keep drawer state
+      await this.actor.update({ [path]: value }, { render: false });
     });
 
     // Persist specialization Bonus on change (commit on blur to avoid partial numbers)
@@ -466,7 +462,8 @@ class BESMActorSheet extends ActorSheet {
       const path = el.name;
       if (!path) return;
       const value = Number(el.value);
-      await this.actor.update({ [path]: isNaN(value) ? 0 : value });
+      // Update without re-rendering to keep drawer state
+      await this.actor.update({ [path]: isNaN(value) ? 0 : value }, { render: false });
     });
 
     // Persist skill fields on blur (rank, raceFeat, misc)
@@ -475,13 +472,13 @@ class BESMActorSheet extends ActorSheet {
       const path = el.name;
       if (!path) return;
       const value = Number(el.value);
-      await this.actor.update({ [path]: isNaN(value) ? 0 : value });
+      // Update without re-rendering
+      await this.actor.update({ [path]: isNaN(value) ? 0 : value }, { render: false });
     });
 
     // Skill Specializations: delete
     html.find('.skill-spec-delete').click(async ev => {
-      // Save any in-progress edits before updating arrays and re-rendering
-      await this._onSubmit(ev);
+      ev.preventDefault();
       const key = ev.currentTarget?.dataset?.skillKey;
       const idx = Number(ev.currentTarget?.dataset?.index ?? -1);
       if (!key || idx < 0) return;
@@ -489,15 +486,13 @@ class BESMActorSheet extends ActorSheet {
       const specs = Array.isArray(skill.specializations) ? skill.specializations.slice() : [];
       if (idx >= specs.length) return;
       specs.splice(idx, 1);
-      await this.actor.update({ [`system.skills.${key}.specializations`]: specs });
-      this.render(false);
+      // Update without re-rendering to keep drawer state
+      await this.actor.update({ [`system.skills.${key}.specializations`]: specs }, { render: false });
     });
 
     // Skill Specializations: toggle open/closed to save space
     html.find('.skill-spec-toggle').click(async ev => {
       ev.preventDefault();
-      // Commit any in-progress edits before changing UI state
-      await this._onSubmit(ev);
       const $target = $(ev.currentTarget);
       const $skillRow = $target.closest('tr.skill-row');
       const $drawerRow = $skillRow.next('tr.skill-spec-row');
