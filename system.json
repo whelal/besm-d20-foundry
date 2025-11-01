@@ -1,0 +1,58 @@
+{
+  "id": "besm-d20",
+  "title": "BESM d20 System",
+  "description": "A comprehensive system for playing Big Eyes Small Mouth d20 in Foundry VTT. Features character sheets, power/attribute/defect management, and BESM-specific mechanics.",
+  "version": "0.0.1",
+  "compatibility": {
+    "minimum": "13",
+    "verified": "13.330",
+    "maximum": "13"
+  },
+  "manifest": "https://raw.githubusercontent.com/whelal/besm-d20-foundry/main/system.json",
+  "download": "https://github.com/whelal/besm-d20-foundry/archive/main.zip",
+  "url": "https://github.com/whelal/besm-d20-foundry",
+  "authors": [
+    {
+      "name": "Nova & Contributors",
+      "url": "https://github.com/whelal/besm-d20-foundry"
+    }
+  ],
+  "esmodules": [
+    "scripts/system.js"
+  ],
+  "styles": [
+    "styles/system.css"
+  ],
+  "languages": [
+    {
+      "lang": "en",
+      "name": "English",
+      "path": "lang/en.json"
+    }
+  ],
+  "documentTypes": {
+    "Actor": {
+      "character": {},
+      "npc": {}
+    },
+    "Item": {
+      "power": {},
+      "attribute": {},
+      "defect": {},
+      "skill": {},
+      "equipment": {}
+    }
+  },
+  "packs": [],
+  "initiative": "1d20 + @abilities.dex.mod",
+  "grid": {
+    "distance": 5,
+    "units": "ft"
+  },
+  "primaryTokenAttribute": "health",
+  "secondaryTokenAttribute": "energy",
+  "socket": true,
+  "license": "MIT",
+  "bugs": "https://github.com/whelal/besm-d20-foundry/issues",
+  "changelog": "https://github.com/whelal/besm-d20-foundry/releases"
+}
