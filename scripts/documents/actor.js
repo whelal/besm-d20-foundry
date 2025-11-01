@@ -9,6 +9,20 @@ export class BESMActor extends Actor {
   }
 
   /** @override */
+  _onUpdate(data, options, userId) {
+    // If render: false was explicitly set, don't trigger sheet re-renders
+    if (options.render === false) {
+      console.log('[BESM DEBUG] _onUpdate with render:false, skipping auto-render');
+      // Call parent's parent to skip the render call in _onUpdate
+      Document.prototype._onUpdate.call(this, data, options, userId);
+      return;
+    }
+    // Otherwise use normal behavior
+    console.log('[BESM DEBUG] _onUpdate with normal render behavior');
+    super._onUpdate(data, options, userId);
+  }
+
+  /** @override */
   getRollData() {
     const data = super.getRollData();
     data.abilities = foundry.utils.deepClone(this.system.abilities || {});
