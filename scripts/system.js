@@ -9,6 +9,19 @@ import { BESMItem } from "./documents/item.js";
 
 // Initialize the system
 Hooks.once("init", async function() {
+  // Register Handlebars helpers
+  Handlebars.registerHelper("numberValue", (v) => {
+    const n = Number(v);
+    return isNaN(n) ? 0 : n;
+  });
+  Handlebars.registerHelper("signedNumber", (v) => {
+    const n = Number(v) || 0;
+    return n >= 0 ? `+${n}` : `${n}`;
+  });
+  Handlebars.registerHelper("eq", (a, b) => a === b);
+  Handlebars.registerHelper("lt", (a, b) => Number(a) < Number(b));
+  Handlebars.registerHelper("gt", (a, b) => Number(a) > Number(b));
+  Handlebars.registerHelper("sub", (a, b) => Number(a) - Number(b));
   console.log("BESM d20 | Initializing the BESM d20 System");
 
   // Configure initiative
