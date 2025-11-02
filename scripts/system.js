@@ -326,6 +326,24 @@ class BESMActorSheet extends ActorSheet {
     return context;
   }
 
+  /** @override */
+  async _updateObject(event, formData) {
+    const data = foundry.utils.expandObject(formData);
+
+    // Walk skills and drop empty specs
+    const skills = data.system?.skills ?? {};
+    for (const [k, v] of Object.entries(skills)) {
+      const specs = v?.specializations;
+      if (Array.isArray(specs)) {
+        skills[k].specializations = specs.filter(s => (s?.name ?? "").trim().length);
+      }
+    }
+
+    // Collapse back and submit
+    const collapsed = foundry.utils.flattenObject(data);
+    await super._updateObject(event, collapsed);
+  }
+
   /**
    * Organize and classify Items for Character sheets
    */
