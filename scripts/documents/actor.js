@@ -204,12 +204,15 @@ export class BESMActor extends Actor {
         // Ensure optional bonuses exist
         if (skill.raceFeat === undefined) skill.raceFeat = 0;
         if (skill.misc === undefined) skill.misc = 0;
-        // Normalize specializations
+        // Normalize specializations (accept legacy strings)
         if (!Array.isArray(skill.specializations)) skill.specializations = [];
-        skill.specializations = skill.specializations.map(s => ({
-          name: String((s && s.name) ?? ""),
-          bonus: Number((s && s.bonus) ?? 0) || 0
-        }));
+        skill.specializations = skill.specializations.map(s => {
+          if (typeof s === "string") return { name: s, bonus: 0 };
+          return {
+            name: String((s && s.name) ?? ""),
+            bonus: Number((s && s.bonus) ?? 0) || 0
+          };
+        });
         // Total includes rank + ability mod + race/feat + misc
         skill.total = (skill.rank || 0) + abilityMod + (skill.raceFeat || 0) + (skill.misc || 0);
       }
