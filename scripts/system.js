@@ -328,6 +328,12 @@ class BESMActorSheet extends ActorSheet {
 
   /** @override */
   async _updateObject(event, formData) {
+    // See what the browser is actually posting
+    console.debug("FORM DATA (flat)", formData);
+
+    const expanded = foundry.utils.expandObject(formData);
+    console.debug("FORM DATA (expanded)", expanded?.system?.skills);
+
     const data = foundry.utils.expandObject(formData);
 
     // Walk skills and drop empty specs
