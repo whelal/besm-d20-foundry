@@ -414,7 +414,8 @@ class BESMActorSheet extends ActorSheet {
    */
   async _onSpecAdd(event) {
     event.preventDefault();
-    const skillKey = event.currentTarget.dataset.skill;
+    const ds = event.currentTarget?.dataset || {};
+    const skillKey = ds.skill ?? ds.skillKey;
     if (!skillKey) return;
     const path = `system.skills.${skillKey}.specializations`;
     const specs = foundry.utils.duplicate(foundry.utils.getProperty(this.actor, path) ?? []);
@@ -427,10 +428,11 @@ class BESMActorSheet extends ActorSheet {
    */
   async _onSpecRemove(event) {
     event.preventDefault();
-    const { skill, index } = event.currentTarget.dataset;
-    const i = Number(index);
-    if (!skill || i < 0) return;
-    const path = `system.skills.${skill}.specializations`;
+    const ds = event.currentTarget?.dataset || {};
+    const skillKey = ds.skill ?? ds.skillKey;
+    const i = Number(ds.index ?? ds.idx ?? -1);
+    if (!skillKey || i < 0) return;
+    const path = `system.skills.${skillKey}.specializations`;
     const specs = foundry.utils.duplicate(foundry.utils.getProperty(this.actor, path) ?? []);
     if (i >= specs.length) return;
     specs.splice(i, 1);
