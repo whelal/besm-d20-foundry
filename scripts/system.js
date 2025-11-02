@@ -389,7 +389,7 @@ class BESMActorSheet extends ActorSheet {
    */
   async _onSpecAdd(event) {
     event.preventDefault();
-    const skillKey = event.currentTarget?.dataset?.skillKey;
+    const skillKey = event.currentTarget.dataset.skill;
     if (!skillKey) return;
     const path = `system.skills.${skillKey}.specializations`;
     const specs = foundry.utils.duplicate(foundry.utils.getProperty(this.actor, path) ?? []);
@@ -402,13 +402,13 @@ class BESMActorSheet extends ActorSheet {
    */
   async _onSpecRemove(event) {
     event.preventDefault();
-    const skillKey = event.currentTarget?.dataset?.skillKey;
-    const index = Number(event.currentTarget?.dataset?.index ?? -1);
-    if (!skillKey || index < 0) return;
-    const path = `system.skills.${skillKey}.specializations`;
+    const { skill, index } = event.currentTarget.dataset;
+    const i = Number(index);
+    if (!skill || i < 0) return;
+    const path = `system.skills.${skill}.specializations`;
     const specs = foundry.utils.duplicate(foundry.utils.getProperty(this.actor, path) ?? []);
-    if (index >= specs.length) return;
-    specs.splice(index, 1);
+    if (i >= specs.length) return;
+    specs.splice(i, 1);
     await this.actor.update({ [path]: specs });
   }
 
@@ -454,25 +454,8 @@ class BESMActorSheet extends ActorSheet {
     html.find('.rollable').click(this._onRoll.bind(this));
 
     // Skill Specializations
-    html.find('.skill-spec-add, .spec-chip-add').on('click', this._onSpecAdd.bind(this));
-    html.find('.skill-spec-delete').on('click', this._onSpecRemove.bind(this));
-
-    // Persist specialization fields on blur
-    html.find('.spec-name').on('blur', async ev => {
-      const el = ev.currentTarget;
-      const path = el.name;
-      if (!path) return;
-      const value = String(el.value ?? '');
-      await this.actor.update({ [path]: value }, { render: false });
-    });
-
-    html.find('.spec-bonus').on('blur', async ev => {
-      const el = ev.currentTarget;
-      const path = el.name;
-      if (!path) return;
-      const value = Number(el.value);
-      await this.actor.update({ [path]: isNaN(value) ? 0 : value }, { render: false });
-    });
+    html.find('.spec-add').on('click', this._onSpecAdd.bind(this));
+    html.find('.spec-remove').on('click', this._onSpecRemove.bind(this));
 
     // Persist skill fields on blur (rank, raceFeat, misc)
     html.find('input[name*="system.skills"][name*=".rank"], input[name*="system.skills"][name*=".raceFeat"], input[name*="system.skills"][name*=".misc"]').on('blur', async ev => {
