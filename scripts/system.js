@@ -426,67 +426,43 @@ class BESMActorSheet extends ActorSheet {
     html.find('.rollable').click(this._onRoll.bind(this));
 
     // Skill Specializations: add
-    html.find('.skill-spec-add').click(async ev => {
+    html.find('.skill-spec-add, .spec-chip-add').on('click', async ev => {
       ev.preventDefault();
-      const $target = $(ev.currentTarget);
-      let key = ev.currentTarget?.dataset?.skillKey;
-      if (!key) {
-        const $drawerRow = $target.closest('tr.skill-spec-row');
-        const $skillRow = $drawerRow.prev('tr.skill-row');
-        key = ($drawerRow.data('skillKey')) || ($skillRow.data('skillKey'));
-      }
-      if (!key) return;
-      const k = String(key);
-      const skill = this.actor.system?.skills?.[k] ?? {};
-      const specs = Array.isArray(skill.specializations) ? skill.specializations : [];
-      const updated = specs.concat([{ name: "", bonus: 0 }]);
-      await this.actor.update({ [`system.skills.${k}.specializations`]: updated }, { render: false });
-      // Ensure drawer and skill row stay open
-      const $drawerRow = $target.closest('tr.skill-spec-row');
-      const $skillRow = $drawerRow.prev('tr.skill-row');
-      if ($drawerRow?.length && $skillRow?.length) {
-        $drawerRow.addClass('open');
-        $skillRow.addClass('open');
-      }
+      const skillKey = ev.currentTarget?.dataset?.skillKey;
+      if (!skillKey) return;
+      const path = `system.skills.${skillKey}.specializations`;
+      const specs = foundry.utils.duplicate(foundry.utils.getProperty(this.actor, path) ?? []);
+      specs.push({ name: "", bonus: 0 }); // add a blank slot
+      await this.actor.update({ [path]: specs });
     });
 
-    // Inline chip: add and open drawer
-    html.find('.spec-chip-add').click(async ev => {
+    // Skill Specializations: delete
+    html.find('.skill-spec-delete').on('click', async ev => {
       ev.preventDefault();
-      const $target = $(ev.currentTarget);
-      const $skillRow = $target.closest('tr.skill-row');
-      const $drawerRow = $skillRow.next('tr.skill-spec-row');
-      const k = (ev.currentTarget?.dataset?.skillKey) || ($skillRow.data('skillKey'));
-      if (!k) return;
-      const key = String(k);
-      const skill = this.actor.system?.skills?.[key] ?? {};
-      const specs = Array.isArray(skill.specializations) ? skill.specializations : [];
-      const updated = specs.concat([{ name: "", bonus: 0 }]);
-      await this.actor.update({ [`system.skills.${key}.specializations`]: updated }, { render: false });
-      // Open the drawer
-      if ($drawerRow?.length && $skillRow?.length) {
-        $drawerRow.addClass('open');
-        $skillRow.addClass('open');
-      }
+      const skillKey = ev.currentTarget?.dataset?.skillKey;
+      const index = Number(ev.currentTarget?.dataset?.index ?? -1);
+      if (!skillKey || index < 0) return;
+      const path = `system.skills.${skillKey}.specializations`;
+      const specs = foundry.utils.duplicate(foundry.utils.getProperty(this.actor, path) ?? []);
+      if (index >= specs.length) return;
+      specs.splice(index, 1);
+      await this.actor.update({ [path]: specs });
     });
 
-    // Persist specialization Name on input (keystroke) for reliability
-    html.find('.spec-name').on('input', async ev => {
+    // Persist specialization fields on blur
+    html.find('.spec-name').on('blur', async ev => {
       const el = ev.currentTarget;
       const path = el.name;
       if (!path) return;
       const value = String(el.value ?? '');
-      // Update without re-rendering to keep drawer state
       await this.actor.update({ [path]: value }, { render: false });
     });
 
-    // Persist specialization Bonus on change (commit on blur to avoid partial numbers)
-    html.find('.spec-bonus').on('change', async ev => {
+    html.find('.spec-bonus').on('blur', async ev => {
       const el = ev.currentTarget;
       const path = el.name;
       if (!path) return;
       const value = Number(el.value);
-      // Update without re-rendering to keep drawer state
       await this.actor.update({ [path]: isNaN(value) ? 0 : value }, { render: false });
     });
 
@@ -510,20 +486,6 @@ class BESMActorSheet extends ActorSheet {
       const value = isLevel ? Number(el.value) : String(el.value ?? '');
       // Update without re-rendering
       await this.actor.update({ [path]: isLevel ? (isNaN(value) ? 0 : value) : value }, { render: false });
-    });
-
-    // Skill Specializations: delete
-    html.find('.skill-spec-delete').click(async ev => {
-      ev.preventDefault();
-      const key = ev.currentTarget?.dataset?.skillKey;
-      const idx = Number(ev.currentTarget?.dataset?.index ?? -1);
-      if (!key || idx < 0) return;
-      const skill = this.actor.system?.skills?.[key] ?? {};
-      const specs = Array.isArray(skill.specializations) ? skill.specializations.slice() : [];
-      if (idx >= specs.length) return;
-      specs.splice(idx, 1);
-      // Update without re-rendering to keep drawer state
-      await this.actor.update({ [`system.skills.${key}.specializations`]: specs }, { render: false });
     });
 
     // Skill Specializations: toggle open/closed to save space
