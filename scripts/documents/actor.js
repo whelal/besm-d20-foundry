@@ -125,7 +125,8 @@ export class BESMActor extends Actor {
           abilityMod: 0,
           raceFeat: 0,
           misc: 0,
-          total: 0
+          total: 0,
+          specializations: []
         };
       } else {
         // Only add missing properties, don't overwrite existing ones
