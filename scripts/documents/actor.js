@@ -11,22 +11,36 @@ export class BESMActor extends Actor {
     if (this.type === 'character') {
       const systemData = this.system;
       
-      if (!Array.isArray(systemData.classes)) {
-        systemData.classes = [];
+      // --- Normalize classes safely (no data loss) ---
+      let classes = systemData.classes;
+
+      // Coerce object-with-numeric-keys -> real array
+      if (!Array.isArray(classes)) {
+        const entries = classes && typeof classes === "object" ? Object.values(classes) : [];
+        classes = entries.map(c => ({
+          name: String(c?.name ?? ""),
+          level: Number(c?.level ?? 0) || 0
+        }));
       }
-      // Pad to 3 slots without destroying existing entries
-      while (systemData.classes.length < 3) {
-        systemData.classes.push({ name: "", level: 0 });
+
+      // Seed a sensible default row only if truly empty
+      if (classes.length === 0) {
+        classes = [{ name: "", level: systemData.level || 1 }];
       }
-      // Normalize in-place to preserve object references
-      for (let idx = 0; idx < systemData.classes.length; idx++) {
-        const cls = systemData.classes[idx];
-        if (typeof cls.name !== 'string') cls.name = String(cls?.name ?? "");
-        if (typeof cls.level !== 'number') cls.level = Number(cls?.level ?? 0) || 0;
-        // Auto-sync primary class level if unset
-        if (idx === 0 && cls.level === 0) {
-          cls.level = systemData.level || 1;
-        }
+
+      // (Optional UI padding — keeps storage minimal but gives users 3 rows to edit)
+      const padded = [...classes];
+      while (padded.length < 3) padded.push({ name: "", level: 0 });
+
+      // Assign the real data (no blanks) back to the document
+      systemData.classes = classes;
+
+      // Provide padded rows to the sheet via a computed convenience (don't store):
+      systemData._uiClasses = padded;
+
+      // If you really want to auto-fill primary class level when unset AND actor has a level:
+      if ((systemData.classes[0]?.level ?? 0) === 0 && (systemData.level ?? 0) > 0) {
+        systemData.classes[0].level = systemData.level;
       }
     }
   }

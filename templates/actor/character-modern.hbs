@@ -86,7 +86,7 @@
               </div>
             </div>
             <div class="class-grid">
-              {{#each system.classes as |class idx|}}
+              {{#each system._uiClasses as |class idx|}}
               <div class="class-row-compact">
                 <label>Class</label>
                 <input type="text" name="system.classes.{{idx}}.name" value="{{class.name}}" placeholder="Class"/>
