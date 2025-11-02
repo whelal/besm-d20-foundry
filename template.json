@@ -248,7 +248,7 @@
       "system": {
         "rank": 0,
         "ability": "int",
-        "specialization": "",
+        "specializations": [],
         "notes": "",
         "description": ""
       }
