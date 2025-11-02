@@ -6,6 +6,29 @@ export class BESMActor extends Actor {
   /** @override */
   prepareData() {
     super.prepareData();
+    
+    // Normalize classes array in prepareData (runs before derived data)
+    if (this.type === 'character') {
+      const systemData = this.system;
+      
+      if (!Array.isArray(systemData.classes)) {
+        systemData.classes = [];
+      }
+      // Pad to 3 slots without destroying existing entries
+      while (systemData.classes.length < 3) {
+        systemData.classes.push({ name: "", level: 0 });
+      }
+      // Normalize in-place to preserve object references
+      for (let idx = 0; idx < systemData.classes.length; idx++) {
+        const cls = systemData.classes[idx];
+        if (typeof cls.name !== 'string') cls.name = String(cls?.name ?? "");
+        if (typeof cls.level !== 'number') cls.level = Number(cls?.level ?? 0) || 0;
+        // Auto-sync primary class level if unset
+        if (idx === 0 && cls.level === 0) {
+          cls.level = systemData.level || 1;
+        }
+      }
+    }
   }
 
   /** @override */
@@ -57,27 +80,6 @@ export class BESMActor extends Actor {
     if (systemData.details.discretionaryPoints === undefined) {
       systemData.details.discretionaryPoints = 0;
     }
-
-    // Normalize classes array non-destructively
-    if (!Array.isArray(systemData.classes)) {
-      systemData.classes = [];
-    }
-    // Pad to 3 slots without destroying existing entries
-    while (systemData.classes.length < 3) {
-      systemData.classes.push({ name: "", level: 0 });
-    }
-    // Coerce each slot to have required properties
-    systemData.classes = systemData.classes.map((cls, idx) => {
-      const normalized = {
-        name: String(cls?.name ?? ""),
-        level: Number(cls?.level ?? 0) || 0
-      };
-      // Auto-sync primary class level if unset
-      if (idx === 0 && normalized.level === 0) {
-        normalized.level = systemData.level || 1;
-      }
-      return normalized;
-    });
 
     systemData.movement = foundry.utils.mergeObject({ base: 30, misc: 0, total: 30 }, systemData.movement || {}, { inplace: false });
 
