@@ -148,7 +148,8 @@ Hooks.once("init", async function() {
     "systems/besm-d20/templates/item/power.hbs",
     "systems/besm-d20/templates/item/attribute.hbs",
     "systems/besm-d20/templates/item/defect.hbs",
-    "systems/besm-d20/templates/item/equipment.hbs"
+    "systems/besm-d20/templates/item/equipment.hbs",
+    "systems/besm-d20/templates/partials/spec-pill.hbs"
   ];
   
   loadTemplates(templatePaths);
@@ -480,9 +481,10 @@ class BESMActorSheet extends ActorSheet {
   // Skill Specializations
   html.find('.spec-add').on('click', this._onSpecAdd.bind(this));
   html.find('.spec-remove').on('click', this._onSpecRemove.bind(this));
-  // Also support inline pill UI
+  // Also support inline pill UI and chip add in summary
   html.find('.pill-add').on('click', this._onSpecAdd.bind(this));
   html.find('.pill-remove').on('click', this._onSpecRemove.bind(this));
+  html.find('.spec-chip-add').on('click', this._onSpecAdd.bind(this));
 
     // Persist skill fields on blur (rank, raceFeat, misc)
     html.find('input[name*="system.skills"][name*=".rank"], input[name*="system.skills"][name*=".raceFeat"], input[name*="system.skills"][name*=".misc"]').on('blur', async ev => {
