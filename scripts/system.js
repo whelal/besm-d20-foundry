@@ -384,6 +384,34 @@ class BESMActorSheet extends ActorSheet {
     };
   }
 
+  /**
+   * Add a blank specialization to a skill
+   */
+  async _onSpecAdd(event) {
+    event.preventDefault();
+    const skillKey = event.currentTarget?.dataset?.skillKey;
+    if (!skillKey) return;
+    const path = `system.skills.${skillKey}.specializations`;
+    const specs = foundry.utils.duplicate(foundry.utils.getProperty(this.actor, path) ?? []);
+    specs.push({ name: "", bonus: 0 });
+    await this.actor.update({ [path]: specs });
+  }
+
+  /**
+   * Remove a specialization from a skill
+   */
+  async _onSpecRemove(event) {
+    event.preventDefault();
+    const skillKey = event.currentTarget?.dataset?.skillKey;
+    const index = Number(event.currentTarget?.dataset?.index ?? -1);
+    if (!skillKey || index < 0) return;
+    const path = `system.skills.${skillKey}.specializations`;
+    const specs = foundry.utils.duplicate(foundry.utils.getProperty(this.actor, path) ?? []);
+    if (index >= specs.length) return;
+    specs.splice(index, 1);
+    await this.actor.update({ [path]: specs });
+  }
+
   /** @override */
   activateListeners(html) {
     super.activateListeners(html);
@@ -425,29 +453,9 @@ class BESMActorSheet extends ActorSheet {
     // Rollable abilities
     html.find('.rollable').click(this._onRoll.bind(this));
 
-    // Skill Specializations: add
-    html.find('.skill-spec-add, .spec-chip-add').on('click', async ev => {
-      ev.preventDefault();
-      const skillKey = ev.currentTarget?.dataset?.skillKey;
-      if (!skillKey) return;
-      const path = `system.skills.${skillKey}.specializations`;
-      const specs = foundry.utils.duplicate(foundry.utils.getProperty(this.actor, path) ?? []);
-      specs.push({ name: "", bonus: 0 }); // add a blank slot
-      await this.actor.update({ [path]: specs });
-    });
-
-    // Skill Specializations: delete
-    html.find('.skill-spec-delete').on('click', async ev => {
-      ev.preventDefault();
-      const skillKey = ev.currentTarget?.dataset?.skillKey;
-      const index = Number(ev.currentTarget?.dataset?.index ?? -1);
-      if (!skillKey || index < 0) return;
-      const path = `system.skills.${skillKey}.specializations`;
-      const specs = foundry.utils.duplicate(foundry.utils.getProperty(this.actor, path) ?? []);
-      if (index >= specs.length) return;
-      specs.splice(index, 1);
-      await this.actor.update({ [path]: specs });
-    });
+    // Skill Specializations
+    html.find('.skill-spec-add, .spec-chip-add').on('click', this._onSpecAdd.bind(this));
+    html.find('.skill-spec-delete').on('click', this._onSpecRemove.bind(this));
 
     // Persist specialization fields on blur
     html.find('.spec-name').on('blur', async ev => {
