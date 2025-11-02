@@ -58,16 +58,26 @@ export class BESMActor extends Actor {
       systemData.details.discretionaryPoints = 0;
     }
 
+    // Normalize classes array non-destructively
     if (!Array.isArray(systemData.classes)) {
       systemData.classes = [];
     }
+    // Pad to 3 slots without destroying existing entries
     while (systemData.classes.length < 3) {
       systemData.classes.push({ name: "", level: 0 });
     }
-    // Make sure primary class defaults to current level when unset
-    if ((systemData.classes[0]?.level ?? 0) === 0) {
-      systemData.classes[0].level = systemData.level || 1;
-    }
+    // Coerce each slot to have required properties
+    systemData.classes = systemData.classes.map((cls, idx) => {
+      const normalized = {
+        name: String(cls?.name ?? ""),
+        level: Number(cls?.level ?? 0) || 0
+      };
+      // Auto-sync primary class level if unset
+      if (idx === 0 && normalized.level === 0) {
+        normalized.level = systemData.level || 1;
+      }
+      return normalized;
+    });
 
     systemData.movement = foundry.utils.mergeObject({ base: 30, misc: 0, total: 30 }, systemData.movement || {}, { inplace: false });
 
