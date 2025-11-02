@@ -465,11 +465,11 @@
           {{!-- Drive rendering from configured skill list for consistency and to avoid blanks --}}
           {{#each config.skills as |label key|}}
           {{#with (lookup ../system.skills key) as |skill|}}
-          <tr class="skill-row" data-skill-key="{{../key}}">
+          <tr class="skill-row" data-skill="{{../key}}">
             <td>
               <div class="skill-name-cell">
-                <a class="skill-spec-toggle" data-skill-key="{{../key}}" title="Show Specializations"><i class="fas fa-chevron-right"></i></a>
-                <a class="skill-spec-toggle skill-name" data-skill-key="{{../key}}" title="Show Specializations">{{label}}</a>
+                <a class="skill-spec-toggle" data-skill="{{../key}}" title="Show Specializations"><i class="fas fa-chevron-right"></i></a>
+                <a class="skill-spec-toggle skill-name" data-skill="{{../key}}" title="Show Specializations">{{label}}</a>
                 <span class="spec-chip-group">
                   {{#each skill.specializations as |spec sIdx|}}
                     {{#if (lt sIdx 2)}}
@@ -479,7 +479,7 @@
                   {{#if (gt skill.specializations.length 2)}}
                     <span class="spec-chip more">+{{sub skill.specializations.length 2}} more</span>
                   {{/if}}
-                  <a class="spec-chip spec-chip-add" data-skill-key="{{../key}}" title="Add specialization"><i class="fas fa-plus"></i></a>
+                  <a class="spec-chip spec-chip-add" data-skill="{{../key}}" title="Add specialization"><i class="fas fa-plus"></i></a>
                 </span>
               </div>
             </td>
@@ -497,11 +497,10 @@
             <td>{{signedNumber skill.total}}</td>
             <td class="skill-roll"><a class="rollable" data-roll="1d20+{{skill.total}}" data-label="{{label}} Check"><i class="fas fa-dice-d20"></i></a></td>
           </tr>
-          {{/with}}
-          <tr class="skill-spec-row" data-skill="{{key}}">
+          <tr class="skill-spec-row" data-skill="{{../key}}">
             <td colspan="8">
               <div class="skill-specs pill-list">
-                {{#with (lookup ../system.skills key) as |s|}}
+                {{#with (lookup ../../system.skills key) as |s|}}
                 {{#each s.specializations as |spec sIdx|}}
                 <div class="spec-pill">
                   <input type="text" class="spec-name" name="system.skills.{{../../key}}.specializations.{{sIdx}}.name" value="{{spec.name}}" placeholder="Specialization"/>
@@ -516,6 +515,7 @@
               </div>
             </td>
           </tr>
+          {{/with}}
           {{/each}}
         </tbody>
       </table>
@@ -548,7 +548,7 @@
             <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
           </div>
         </li>
-        {{/each}}
+  {{/each}}
       </ol>
     </div>
 
