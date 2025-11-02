@@ -477,9 +477,12 @@ class BESMActorSheet extends ActorSheet {
     // Rollable abilities
     html.find('.rollable').click(this._onRoll.bind(this));
 
-    // Skill Specializations
-    html.find('.spec-add').on('click', this._onSpecAdd.bind(this));
-    html.find('.spec-remove').on('click', this._onSpecRemove.bind(this));
+  // Skill Specializations
+  html.find('.spec-add').on('click', this._onSpecAdd.bind(this));
+  html.find('.spec-remove').on('click', this._onSpecRemove.bind(this));
+  // Also support inline pill UI
+  html.find('.pill-add').on('click', this._onSpecAdd.bind(this));
+  html.find('.pill-remove').on('click', this._onSpecRemove.bind(this));
 
     // Persist skill fields on blur (rank, raceFeat, misc)
     html.find('input[name*="system.skills"][name*=".rank"], input[name*="system.skills"][name*=".raceFeat"], input[name*="system.skills"][name*=".misc"]').on('blur', async ev => {
