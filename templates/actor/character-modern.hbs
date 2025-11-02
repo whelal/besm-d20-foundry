@@ -498,21 +498,22 @@
             <td class="skill-roll"><a class="rollable" data-roll="1d20+{{skill.total}}" data-label="{{label}} Check"><i class="fas fa-dice-d20"></i></a></td>
           </tr>
           {{/with}}
-          <tr class="skill-spec-row" data-skill-key="{{key}}">
+          <tr class="skill-spec-row" data-skill="{{key}}">
             <td colspan="8">
-              <ul class="spec-list">
+              <div class="skill-specs pill-list">
                 {{#with (lookup ../system.skills key) as |s|}}
                 {{#each s.specializations as |spec sIdx|}}
-                <li class="spec-item">
-                  <input type="text" name="system.skills.{{../../key}}.specializations.{{sIdx}}.name" value="{{spec.name}}" data-dtype="String" placeholder="Specialization"/>
-                  <input type="number" name="system.skills.{{../../key}}.specializations.{{sIdx}}.bonus" value="{{spec.bonus}}" data-dtype="Number" step="1" min="-99" max="99"/>
+                <div class="spec-pill">
+                  <input type="text" class="spec-name" name="system.skills.{{../../key}}.specializations.{{sIdx}}.name" value="{{spec.name}}" placeholder="Specialization"/>
+                  <span class="plus">+</span>
+                  <input type="number" class="spec-bonus" name="system.skills.{{../../key}}.specializations.{{sIdx}}.bonus" value="{{numberValue spec.bonus}}" data-dtype="Number"/>
                   <a class="rollable" title="Roll {{../../label}} ({{spec.name}})" data-roll="1d20+{{s.total}}+{{numberValue spec.bonus}}" data-label="{{../../label}} ({{spec.name}}) Check"><i class="fas fa-dice-d20"></i></a>
-                  <a class="spec-remove" data-skill="{{../../key}}" data-index="{{sIdx}}" title="Remove"><i class="fas fa-times"></i></a>
-                </li>
+                  <a class="spec-remove" data-skill="{{../../key}}" data-index="{{sIdx}}" title="Delete"><i class="fas fa-times"></i></a>
+                </div>
                 {{/each}}
                 {{/with}}
-              </ul>
-              <button type="button" class="spec-add" data-skill="{{key}}">+ Specialization</button>
+                <a class="spec-add" data-skill="{{key}}"><i class="fas fa-plus-circle"></i> Add</a>
+              </div>
             </td>
           </tr>
           {{/each}}
