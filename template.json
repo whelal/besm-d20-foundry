@@ -5,7 +5,8 @@
       "npc"
     ],
     "character": {
-      "abilities": {
+      "system": {
+        "abilities": {
         "str": {
           "value": 10,
           "mod": 0
@@ -158,9 +159,11 @@
       "experience": 0,
       "biography": "",
       "notes": ""
+      }
     },
     "npc": {
-      "abilities": {
+      "system": {
+        "abilities": {
         "str": {
           "value": 10,
           "mod": 0
@@ -201,6 +204,7 @@
       "type": "minion",
       "biography": "",
       "notes": ""
+      }
     }
   },
   "Item": {
@@ -212,50 +216,60 @@
       "equipment"
     ],
     "power": {
-      "powerType": "attack",
-      "rank": 1,
-      "baseCost": 1,
-      "totalCost": 1,
-      "energyCost": 0,
-      "range": "",
-      "area": "",
-      "duration": "",
-      "damageFormula": "",
-      "attackBonus": 0,
-      "defenseType": "physical",
-      "resistible": false,
-      "modifiers": [],
-      "notes": "",
-      "description": ""
+      "system": {
+        "powerType": "attack",
+        "rank": 1,
+        "baseCost": 1,
+        "totalCost": 1,
+        "energyCost": 0,
+        "range": "",
+        "area": "",
+        "duration": "",
+        "damageFormula": "",
+        "attackBonus": 0,
+        "defenseType": "physical",
+        "resistible": false,
+        "modifiers": [],
+        "notes": "",
+        "description": ""
+      }
     },
     "attribute": {
-      "rank": 1,
-      "baseCost": 1,
-      "totalCost": 1,
-      "notes": "",
-      "description": ""
+      "system": {
+        "rank": 1,
+        "baseCost": 1,
+        "totalCost": 1,
+        "notes": "",
+        "description": ""
+      }
     },
     "defect": {
-      "rank": 1,
-      "bonusValue": 1,
-      "totalBonus": 1,
-      "notes": "",
-      "description": ""
+      "system": {
+        "rank": 1,
+        "bonusValue": 1,
+        "totalBonus": 1,
+        "notes": "",
+        "description": ""
+      }
     },
     "skill": {
-      "rank": 0,
-      "ability": "int",
-      "specialization": "",
-      "notes": "",
-      "description": ""
+      "system": {
+        "rank": 0,
+        "ability": "int",
+        "specialization": "",
+        "notes": "",
+        "description": ""
+      }
     },
     "equipment": {
-      "quantity": 1,
-      "weight": 0,
-      "cost": 0,
-      "equipped": false,
-      "notes": "",
-      "description": ""
+      "system": {
+        "quantity": 1,
+        "weight": 0,
+        "cost": 0,
+        "equipped": false,
+        "notes": "",
+        "description": ""
+      }
     }
   }
 }
