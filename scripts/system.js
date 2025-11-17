@@ -193,6 +193,22 @@ Hooks.once("init", async function() {
   Handlebars.registerHelper("localizeKey", function(key) {
     return game.i18n.localize(key);
   });
+
+  // Build a specialization input path reliably from key and index
+  Handlebars.registerHelper("let", function(varName, value, options) {
+    if (typeof varName !== "string" || !options) return "";
+    let context = {};
+    context[varName] = value;
+    return options.fn(context);
+  });
+
+  Handlebars.registerHelper("specPath", function(key, i, field) {
+    const k = String(key ?? "").trim();
+    const idx = Number(i) || 0;
+    const f = String(field ?? "name");
+    if (!k) return `system.skills.__invalid__.specializations.${idx}.${f}`;
+    return `system.skills.${k}.specializations.${idx}.${f}`;
+  });
 });
 
 /**
@@ -274,6 +290,51 @@ function rollItemMacro(itemName) {
  * BESM Character Actor Sheet
  */
 class BESMActorSheet extends ActorSheet {
+  constructor(...args) {
+    super(...args);
+    // Track a pending focus target after re-render: { skillKey, index }
+    this._pendingSpecFocus = null;
+    // Debounce timers for live-saving inputs (keyed by input name)
+    this._debounceTimers = {};
+  }
+  /**
+   * Try hard to resolve the skill key for a click target.
+   * Order:
+   * 1) element.dataset.skill / dataset.skillKey
+   * 2) walk up ancestors looking for non-empty data-skill
+   * 3) find enclosing tr.skill-spec-row, then look at previous tr.skill-row's data-skill
+   * 4) extract from any input/select name like system.skills.<key>.* within the skill-row
+   */
+  _resolveSkillKey(target) {
+    if (!target) return '';
+    // 1) direct dataset
+    let skillKey = target.dataset?.skill || target.dataset?.skillKey || '';
+    // 2) ancestor with non-empty data-skill
+    if (!skillKey) {
+      let node = target;
+      while (node && !skillKey) {
+        const v = node.dataset?.skill || node.getAttribute?.('data-skill') || '';
+        if (v) skillKey = v;
+        node = node.parentElement;
+      }
+    }
+    // 3) sibling skill-row
+    if (!skillKey) {
+      const specRow = target.closest?.('tr.skill-spec-row');
+      const skillRow = specRow?.previousElementSibling;
+      if (skillRow && skillRow.classList?.contains('skill-row')) {
+        skillKey = skillRow.dataset?.skill || skillRow.getAttribute?.('data-skill') || '';
+        if (!skillKey) {
+          // 4) try to infer from any input/select name path inside the skill-row
+          const el = skillRow.querySelector?.('[name^="system.skills."]');
+          const name = el?.getAttribute?.('name') || '';
+          const m = name.match(/^system\.skills\.([^\.]+)\./);
+          if (m) skillKey = m[1];
+        }
+      }
+    }
+    return skillKey || '';
+  }
   
   /** @override */
   static get defaultOptions() {
@@ -305,6 +366,20 @@ class BESMActorSheet extends ActorSheet {
     
     // Add the actor's data to context for easier access
     context.system = this.actor.system;
+    // Ensure every configured ability has a default object so the template's
+    // `{{#with (lookup ../system.abilities abilityKey) as |ability|}}` blocks
+    // evaluate even if the actor is missing an ability bucket. This prevents
+    // the Abilities table from rendering blank when the actor data is incomplete.
+    context.system.abilities = context.system.abilities || {};
+    for (const abKey of Object.keys(CONFIG.BESM?.abilities || {})) {
+      if (!Object.prototype.hasOwnProperty.call(context.system.abilities, abKey) || !context.system.abilities[abKey]) {
+        context.system.abilities[abKey] = { value: 0, mod: 0 };
+      } else {
+        // Ensure expected fields exist
+        context.system.abilities[abKey].value = Number(context.system.abilities[abKey].value) || 0;
+        context.system.abilities[abKey].mod = Number(context.system.abilities[abKey].mod) || 0;
+      }
+    }
     context.flags = this.actor.flags;
 
     // Prepare character data
@@ -330,25 +405,84 @@ class BESMActorSheet extends ActorSheet {
   /** @override */
   async _updateObject(event, formData) {
     // See what the browser is actually posting
-    console.debug("FORM DATA (flat)", formData);
+    console.debug("BESM | ActorSheet _updateObject (flat)", formData);
 
     const expanded = foundry.utils.expandObject(formData);
-    console.debug("FORM DATA (expanded)", expanded?.system?.skills);
+    console.debug("BESM | ActorSheet _updateObject (expanded skills)", expanded?.system?.skills);
 
     const data = foundry.utils.expandObject(formData);
 
-    // Walk skills and drop empty specs
+    // Walk skills: normalize and clean stray empty-key buckets created by bad name paths
     const skills = data.system?.skills ?? {};
-    for (const [k, v] of Object.entries(skills)) {
-      const specs = v?.specializations;
-      if (Array.isArray(specs)) {
-        skills[k].specializations = specs.filter(s => (s?.name ?? "").trim().length);
+    // If the form produced an __invalid__ bucket for specializations, attempt to recover them
+    // using the most recently interacted skill key captured on the sheet instance.
+    if (skills.__invalid__?.specializations) {
+      const invalidSpecs = skills.__invalid__.specializations;
+      // Coerce object-like to array
+      const raw = Array.isArray(invalidSpecs) ? invalidSpecs : Object.values(invalidSpecs);
+      // Filter meaningful entries (has a name or non-zero bonus)
+      const meaningful = raw
+        .map(s => ({ name: String(s?.name ?? ''), bonus: Number(s?.bonus ?? 0) || 0 }))
+        .filter(s => s.name.trim().length > 0 || s.bonus !== 0);
+      if (meaningful.length && this._lastSpecSkillKey) {
+        const tgtKey = this._lastSpecSkillKey;
+        skills[tgtKey] = skills[tgtKey] || {};
+        const existing = skills[tgtKey].specializations;
+        const asArray = Array.isArray(existing) ? existing : (existing && typeof existing === 'object' ? Object.values(existing) : []);
+        skills[tgtKey].specializations = [...asArray, ...meaningful];
+        // Clear invalid bucket to avoid clobber
+        delete skills.__invalid__;
       }
+    }
+    if (Object.prototype.hasOwnProperty.call(skills, "")) {
+      delete skills[""]; // remove empty-key bucket
+    }
+    if (Object.prototype.hasOwnProperty.call(skills, "__invalid__")) {
+      delete skills["__invalid__"]; // drop any invalid bucket created by template helper fallback
+    }
+    const validKeys = Object.keys(CONFIG.BESM?.skills || {});
+    // Helper to coerce object-with-numeric-keys into an array
+    const toArray = (val) => {
+      if (Array.isArray(val)) return val;
+      if (val && typeof val === 'object') return Object.values(val);
+      return [];
+    };
+
+    for (const [k, v] of Object.entries(skills)) {
+      // If this key isn't recognized, keep it (future-proof) unless it's obviously empty string
+      if (k === "") { delete skills[""]; continue; }
+      // Preserve existing specializations if the form didn't submit any for this skill
+      const existingSpecs = toArray(foundry.utils.getProperty(this.actor, `system.skills.${k}.specializations`) || []);
+      const hasSubmittedSpecs = Object.prototype.hasOwnProperty.call(v || {}, 'specializations');
+      const rawSpecs = hasSubmittedSpecs ? toArray(v?.specializations) : existingSpecs;
+      // Normalize spec objects, tolerating array-valued fields from duplicate inputs
+      const pickName = (val) => {
+        if (Array.isArray(val)) {
+          const arr = val;
+          const found = [...arr].reverse().find(x => String(x ?? '').trim() !== '');
+          return String(found ?? arr[arr.length - 1] ?? '');
+        }
+        return String(val ?? '');
+      };
+      const pickBonus = (val) => {
+        if (Array.isArray(val)) {
+          const arr = val;
+          const found = [...arr].reverse().map(x => Number(x)).find(n => !isNaN(n));
+          return isNaN(found) ? 0 : found;
+        }
+        const n = Number(val);
+        return isNaN(n) ? 0 : n;
+      };
+      // Normalize spec objects without discarding empty rows (so users can add then type)
+      skills[k].specializations = rawSpecs.map(s => ({
+        name: pickName(s?.name),
+        bonus: pickBonus(s?.bonus)
+      }));
     }
 
     // Collapse back and submit
     const collapsed = foundry.utils.flattenObject(data);
-    await super._updateObject(event, collapsed);
+    return super._updateObject(event, collapsed);
   }
 
   /**
@@ -415,33 +549,62 @@ class BESMActorSheet extends ActorSheet {
   async _onSpecAdd(event) {
     event.preventDefault();
     const ds = event.currentTarget?.dataset || {};
-    const skillKey = ds.skill ?? ds.skillKey;
-    if (!skillKey) return;
+    let skillKey = this._resolveSkillKey(event.currentTarget);
+    if (!skillKey) {
+      console.warn("BESM | _onSpecAdd: Missing skill key on target", ds, event.currentTarget);
+      ui.notifications?.warn?.("Couldn't determine which skill to add a specialization to.");
+      return;
+    }
     const path = `system.skills.${skillKey}.specializations`;
     const specs = foundry.utils.duplicate(foundry.utils.getProperty(this.actor, path) ?? []);
+    console.debug("BESM | _onSpecAdd before", skillKey, specs);
     specs.push({ name: "", bonus: 0 });
-    await this.actor.update({ [path]: specs });
-  }
-
-  /**
+    // Update without forcing an automatic render; we will render once and preserve state
+    await this.actor.update({ [path]: specs }, { render: false });
+    // After render, open the drawer for this skill and focus the new spec name input
+    this._pendingSpecFocus = { skillKey, index: specs.length - 1 };
+    await this.render(false);
+    try {
+      const $root = this.element;
+      const $row = $root.find(`tr.skill-row[data-skill='${skillKey}']`);
+      const $drawer = $row.next('tr.skill-spec-row');
+      if ($row.length && $drawer.length) {
+        $row.addClass('open');
+        $drawer.addClass('open');
+        $row.find('.skill-spec-toggle').attr('aria-expanded', 'true');
+      }
+    } catch (e) {
+      console.warn('BESM | Failed to open specialization drawer after add', e);
+    }
+    console.debug("BESM | _onSpecAdd after", skillKey, specs);
+  }  /**
    * Remove a specialization from a skill
    */
   async _onSpecRemove(event) {
     event.preventDefault();
     const ds = event.currentTarget?.dataset || {};
-    const skillKey = ds.skill ?? ds.skillKey;
+    let skillKey = this._resolveSkillKey(event.currentTarget);
     const i = Number(ds.index ?? ds.idx ?? -1);
-    if (!skillKey || i < 0) return;
+    if (!skillKey || i < 0) {
+      console.warn("BESM | _onSpecRemove: Missing skill key or index", ds, event.currentTarget);
+      ui.notifications?.warn?.("Couldn't remove specialization (missing key or index).");
+      return;
+    }
     const path = `system.skills.${skillKey}.specializations`;
     const specs = foundry.utils.duplicate(foundry.utils.getProperty(this.actor, path) ?? []);
     if (i >= specs.length) return;
     specs.splice(i, 1);
-    await this.actor.update({ [path]: specs });
+    await this.actor.update({ [path]: specs }, { render: false });
+    await this.render(false);
+    console.debug("BESM | _onSpecRemove after", skillKey, specs);
   }
 
   /** @override */
   activateListeners(html) {
     super.activateListeners(html);
+
+    // Rollable abilities (delegated so it survives re-renders) — always active, even on read-only sheets
+    html.on('click', '.rollable', this._onRoll.bind(this));
 
     // Everything below here is only needed if the sheet is editable
     if (!this.isEditable) return;
@@ -477,16 +640,22 @@ class BESMActorSheet extends ActorSheet {
       if (item.type === 'power') item.activatePower();
     });
 
-    // Rollable abilities
-    html.find('.rollable').click(this._onRoll.bind(this));
+  // (Binding moved above to work on read-only sheets too)
 
   // Skill Specializations
-  html.find('.spec-add').on('click', this._onSpecAdd.bind(this));
-  html.find('.spec-remove').on('click', this._onSpecRemove.bind(this));
+  // Use delegated events so clicks fire even after re-renders
+  html.on('click', '.spec-add', this._onSpecAdd.bind(this));
+  html.on('click', '.spec-remove', this._onSpecRemove.bind(this));
   // Also support inline pill UI and chip add in summary
-  html.find('.pill-add').on('click', this._onSpecAdd.bind(this));
-  html.find('.pill-remove').on('click', this._onSpecRemove.bind(this));
-  html.find('.spec-chip-add').on('click', this._onSpecAdd.bind(this));
+  html.on('click', '.pill-add', this._onSpecAdd.bind(this));
+  html.on('click', '.pill-remove', this._onSpecRemove.bind(this));
+  html.on('click', '.spec-chip-add', this._onSpecAdd.bind(this));
+
+  // Track the most recently interacted specialization's skill key for recovery on submit
+  html.on('focusin', 'input[name^="system.skills."][name*=".specializations."]', ev => {
+    const key = this._resolveSkillKey(ev.currentTarget);
+    if (key) this._lastSpecSkillKey = key;
+  });
 
     // Persist skill fields on blur (rank, raceFeat, misc)
     html.find('input[name*="system.skills"][name*=".rank"], input[name*="system.skills"][name*=".raceFeat"], input[name*="system.skills"][name*=".misc"]').on('blur', async ev => {
@@ -496,6 +665,104 @@ class BESMActorSheet extends ActorSheet {
       const value = Number(el.value);
       // Update without re-rendering
       await this.actor.update({ [path]: isNaN(value) ? 0 : value }, { render: false });
+    });
+
+    // Update ability modifier immediately from the input so the UI reflects live typing
+    // and debounce autosave the ability value to actor data to persist changes.
+    html.on('input', 'input[name^="system.abilities."][name$=".value"]', ev => {
+      try {
+        const el = ev.currentTarget;
+        const name = el.name || '';
+        const m = name.match(/^system\.abilities\.([^\.]+)\.value$/);
+        if (!m) return;
+        const abilityKey = m[1];
+        const raw = el.value;
+        const val = Number(raw);
+        const score = isNaN(val) ? 0 : val;
+        const mod = Math.floor((score - 10) / 2);
+        // Update the modifier cell in the same row
+        const $row = $(el).closest('tr');
+        const modCell = $row.find('.ability-mod');
+        if (modCell.length) {
+          const text = (mod >= 0) ? `+${mod}` : `${mod}`;
+          modCell.text(text);
+        }
+        // Update any roll link in the row that depends on this modifier
+        const rollLink = $row.find('.ability-roll a.rollable[data-roll]');
+        if (rollLink.length) {
+          rollLink.get(0).dataset.roll = `1d20+${mod}`;
+        }
+
+        // Debounced save: persist the ability value to actor after a short idle period
+        const path = `system.abilities.${abilityKey}.value`;
+        if (this._debounceTimers?.[path]) clearTimeout(this._debounceTimers[path]);
+        this._debounceTimers[path] = setTimeout(async () => {
+          try {
+            await this.actor.update({ [path]: score }, { render: false });
+          } catch (err) {
+            console.warn('BESM | Failed to persist ability value', path, err);
+          }
+          delete this._debounceTimers[path];
+        }, 300);
+      } catch (err) {
+        console.debug('BESM | Live ability mod update failed', err);
+      }
+    });
+
+    // Persist specialization fields on blur (name, bonus) and re-render sheet for immediate UI update
+    html.on('blur', "input[name^='system.skills.'][name*='.specializations.'][name$='.name']", async ev => {
+      const el = ev.currentTarget;
+      const path = el.name;
+      if (!path) return;
+      // If there's a pending debounce for this input, flush it
+      if (this._debounceTimers?.[path]) {
+        clearTimeout(this._debounceTimers[path]);
+        delete this._debounceTimers[path];
+      }
+      const value = String(el.value ?? "");
+      await this.actor.update({ [path]: value }, { render: false });
+    });
+    html.on('blur', "input[name^='system.skills.'][name*='.specializations.'][name$='.bonus']", async ev => {
+      const el = ev.currentTarget;
+      const path = el.name;
+      if (!path) return;
+      if (this._debounceTimers?.[path]) {
+        clearTimeout(this._debounceTimers[path]);
+        delete this._debounceTimers[path];
+      }
+      const value = Number(el.value);
+      await this.actor.update({ [path]: isNaN(value) ? 0 : value }, { render: false });
+    });
+
+    // Debounced live-save for specialization inputs so typing updates actor after a short pause
+    html.on('input', "input[name^='system.skills.'][name*='.specializations.']", ev => {
+      const el = ev.currentTarget;
+      const path = el.name;
+      if (!path) return;
+      const isBonus = path.endsWith('.bonus');
+      const raw = el.value;
+      const value = isBonus ? (isNaN(Number(raw)) ? 0 : Number(raw)) : String(raw ?? '');
+      // Key by input path
+      const key = path;
+      if (this._debounceTimers?.[key]) clearTimeout(this._debounceTimers[key]);
+      this._debounceTimers[key] = setTimeout(async () => {
+        try {
+          await this.actor.update({ [path]: value }, { render: false });
+        } catch (err) {
+          console.warn('BESM | Failed to save specialization input', path, err);
+        }
+        delete this._debounceTimers[key];
+      }, 450);
+    });
+
+    // Prevent Enter from submitting the sheet while editing specialization fields
+    html.on('keydown', 'input[name^="system.skills."][name*=".specializations."]', ev => {
+      if (ev.key === 'Enter') {
+        ev.preventDefault();
+        ev.stopPropagation();
+        // Commit current field via blur without forcing a re-render
+        ev.currentTarget?.blur?.();
+      }
     });
 
     // Persist class fields on blur and change (name and level)
@@ -521,8 +788,21 @@ class BESMActorSheet extends ActorSheet {
       $drawerRow.toggleClass('open', !isOpen);
       $skillRow.toggleClass('open', !isOpen);
       // Update aria state and rotate chevron via CSS
-      ev.currentTarget.setAttribute('aria-expanded', String(!isOpen));
+      $skillRow.find('.skill-spec-toggle').attr('aria-expanded', String(!isOpen));
     });
+
+    // If we have a pending focus target (after add), focus its name input
+    if (this._pendingSpecFocus) {
+      const { skillKey, index } = this._pendingSpecFocus;
+      const selector = `input[name='system.skills.${skillKey}.specializations.${index}.name']`;
+      const $input = html.find(selector);
+      if ($input.length) {
+        const el = $input.get(0);
+        el.focus();
+        el.select?.();
+      }
+      this._pendingSpecFocus = null;
+    }
 
     // Compact mode toggle
     html.find('input[name="flags.besm-d20.compactMode"]').change(async (ev) => {
@@ -539,6 +819,36 @@ class BESMActorSheet extends ActorSheet {
         li.addEventListener("dragstart", handler, false);
       });
     }
+  }
+
+  /** @override */
+  async _onChangeInput(event) {
+    // Intercept specialization fields so we update without re-rendering the sheet
+    const name = event?.target?.name || '';
+    if (name.startsWith('system.skills.') && name.includes('.specializations.')) {
+      event.preventDefault();
+      event.stopPropagation();
+      const el = event.target;
+      let value;
+      if (name.endsWith('.bonus')) {
+        const n = Number(el.value);
+        value = isNaN(n) ? 0 : n;
+      } else {
+        value = String(el.value ?? '');
+      }
+      // If this was accidentally named with __invalid__, try to reroute to the correct skill using DOM context
+      let path = name;
+      if (name.includes('system.skills.__invalid__.specializations.')) {
+        const skillKey = this._resolveSkillKey(el);
+        if (skillKey) {
+          path = name.replace('system.skills.__invalid__', `system.skills.${skillKey}`);
+        }
+      }
+      await this.actor.update({ [path]: value }, { render: false });
+      return;
+    }
+    // Fallback to default handling for other inputs
+    return super._onChangeInput(event);
   }
 
   /**
@@ -573,6 +883,170 @@ class BESMActorSheet extends ActorSheet {
     const element = event.currentTarget;
     const dataset = element.dataset || {};
 
+    // Ensure this is an actor sheet (guard against stray item sheet delegated hit)
+    if (!(this instanceof ActorSheet)) {
+      console.warn("BESM | _onRoll invoked outside ActorSheet context", this);
+    }
+
+    // Hard trace click origin for specialization debugging
+    console.debug("BESM | _onRoll click", {classes: element.className, dataset});
+
+    // Specialization roll first (no data-roll attribute on link now)
+    if (!dataset.roll && (dataset.skill || dataset.skillkey) && (dataset.index !== undefined)) {
+      let skillKey = String(dataset.skill || dataset.skillkey || '');
+      const i = Number(dataset.index);
+      if (!skillKey) {
+        // Try multiple fallbacks: dataset, getAttribute, or walking up the DOM
+        const tryResolve = () => {
+          // direct dataset
+          const ds = element.dataset?.skill || element.getAttribute?.('data-skill');
+          if (ds) return ds;
+          // walk up parents
+          let node = element;
+          for (let depth = 0; node && depth < 6; depth++) {
+            try {
+              const a = node.dataset?.skill || node.getAttribute?.('data-skill');
+              if (a) return a;
+            } catch (e) {}
+            node = node.parentElement;
+          }
+          return '';
+        };
+        const nodeKey = tryResolve();
+        skillKey = nodeKey || '';
+      }
+      if (!skillKey) {
+        // Extra debug: print the clicked element HTML so we can inspect missing attributes
+        try { console.debug('BESM | _onRoll clicked element outerHTML', element.outerHTML); } catch (e) {}
+      }
+      if (!skillKey) skillKey = this._resolveSkillKey(element) || '';
+      // If an input is currently focused inside this sheet (spec name/bonus), blur it to force a save
+      try {
+        const doc = (this.element && this.element[0] && this.element[0].ownerDocument) ? this.element[0].ownerDocument : document;
+        const active = doc.activeElement;
+        if (active) {
+          const isSpecInput = (active.matches && (active.matches('input.spec-name') || active.matches('input.spec-bonus')))
+            || !!active.closest?.('.spec-pill');
+          if (isSpecInput) {
+            active.blur();
+            // give small time for blur handler / debounce flush to run and update actor
+            await new Promise(resolve => setTimeout(resolve, 80));
+          }
+        }
+      } catch (err) {
+        console.debug('BESM | Could not blur active element before roll', err);
+      }
+      if (!skillKey) {
+        console.warn('BESM | Specialization roll aborted: could not resolve skill key', {dataset});
+        ui.notifications?.warn?.('Could not determine which skill this specialization belongs to.');
+        return;
+      }
+      // If there are pending debounce timers for this spec's inputs, flush them to actor data
+      try {
+        const namePath = `system.skills.${skillKey}.specializations.${i}.name`;
+        const bonusPath = `system.skills.${skillKey}.specializations.${i}.bonus`;
+        const pending = [];
+        const updates = {};
+        if (this._debounceTimers?.[namePath]) {
+          clearTimeout(this._debounceTimers[namePath]);
+          delete this._debounceTimers[namePath];
+          // read from DOM
+          const pill = element.closest?.('.spec-pill');
+          const domName = pill?.querySelector?.('input.spec-name')?.value;
+          if (domName !== undefined) updates[namePath] = String(domName ?? '');
+        }
+        if (this._debounceTimers?.[bonusPath]) {
+          clearTimeout(this._debounceTimers[bonusPath]);
+          delete this._debounceTimers[bonusPath];
+          const pill = element.closest?.('.spec-pill');
+          const domBonus = pill?.querySelector?.('input.spec-bonus')?.value;
+          if (domBonus !== undefined) {
+            const nb = Number(domBonus);
+            updates[bonusPath] = isNaN(nb) ? 0 : nb;
+          }
+        }
+        if (Object.keys(updates).length) {
+          pending.push(this.actor.update(updates, { render: false }));
+        }
+        if (pending.length) await Promise.all(pending);
+      } catch (err) {
+        console.debug('BESM | Error flushing debounced spec inputs before roll', err);
+      }
+      const skill = this.actor.system?.skills?.[skillKey] || {};
+      const baseTotal = Number(skill.total);
+      const baseRobust = [skill.rank, skill.abilityMod, skill.raceFeat, skill.misc]
+        .map(v => Number(v) || 0)
+        .reduce((a, b) => a + b, 0);
+      const base = Number.isFinite(baseTotal) ? baseTotal : baseRobust;
+      const spec = skill.specializations?.[i] || { name: '', bonus: 0 };
+      let specName = String(spec.name || 'Specialization').trim();
+      let specBonus = Number(spec.bonus) || 0;
+      // If the user has just edited the inputs but they haven't been synced to actor data yet,
+      // read the values directly from the DOM relative to the clicked element as a fallback.
+      try {
+        const pillNode = element.closest?.('.spec-pill');
+        console.debug('BESM | DOM fallback: pillNode', pillNode);
+        if (pillNode) {
+          console.debug('BESM | spec-name value (DOM)', pillNode.querySelector?.('input.spec-name')?.value);
+          console.debug('BESM | spec-bonus value (DOM)', pillNode.querySelector?.('input.spec-bonus')?.value);
+        }
+        if (pillNode) {
+          const domName = pillNode.querySelector?.('input.spec-name')?.value;
+          const domBonus = pillNode.querySelector?.('input.spec-bonus')?.value;
+          if (domName && String(domName).trim() !== '') specName = String(domName).trim();
+          if (domBonus !== undefined && domBonus !== null && String(domBonus).trim() !== '') {
+            const db = Number(domBonus);
+            if (!isNaN(db)) specBonus = db;
+          }
+        } else {
+          const drawer = element.closest?.('tr.skill-spec-row');
+          const container = drawer?.querySelector?.(`.skill-specs[data-skill='${skillKey}']`);
+          if (container) {
+            const pills = container.querySelectorAll('.spec-pill');
+            const pill2 = pills?.[i];
+            if (pill2) {
+              const domName = pill2.querySelector?.('input.spec-name')?.value;
+              const domBonus = pill2.querySelector?.('input.spec-bonus')?.value;
+              if (domName && String(domName).trim() !== '') specName = String(domName).trim();
+              if (domBonus !== undefined && domBonus !== null && String(domBonus).trim() !== '') {
+                const db = Number(domBonus);
+                if (!isNaN(db)) specBonus = db;
+              }
+            }
+          }
+        }
+      } catch (err) {
+        console.debug('BESM | Could not read spec values from DOM', err);
+      }
+      let totalMod = (Number(base) || 0) + specBonus;
+      console.debug("BESM | Specialization roll", {skillKey, index: i, baseTotal, baseRobust, chosenBase: base, specName, specBonus, totalMod, skill});
+      const opts = await this._promptRollOptions();
+      if (!opts) return; // cancelled
+      const extra = Number(opts.bonus) || 0;
+      if (extra) totalMod += extra;
+      const note = opts.note ? ` — ${opts.note}` : '';
+      // Build label from current actor data, not stale template attribute
+      const skillLabel = CONFIG.BESM?.skills?.[skillKey] || skillKey;
+      const label = `[ability] ${skillLabel} (${specName}) Check${note}`;
+      let formula = `1d20+${totalMod}`;
+      formula = String(formula)
+        .replace(/,/g, '')
+        .replace(/\s+/g, '')
+        .replace(/\+\+/g, '+')
+        .replace(/\+-/g, '-')
+        .replace(/-\+/g, '-')
+        .replace(/--/g, '+')
+        .replace(/\+$|^-\+/, '');
+      const roll = new Roll(formula, this.actor.getRollData());
+      await roll.evaluate();
+      roll.toMessage({
+        speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+        flavor: label,
+        rollMode: game.settings.get('core', 'rollMode'),
+      });
+      return roll;
+    }
+
     // Handle item rolls
     if (dataset.rollType) {
       if (dataset.rollType === 'item') {
@@ -588,6 +1062,10 @@ class BESMActorSheet extends ActorSheet {
     if (dataset.roll) {
       let formula = dataset.roll;
       let label = dataset.label ? `[ability] ${dataset.label}` : '';
+
+      // (No specialization-specific handling here — specialization rolls are handled
+      // by the dedicated specialization path above which runs when a link does not
+      // include a `data-roll` attribute and has `data-skill` + `data-index`.)
 
       // For all 1d20 rolls, prompt for an extra modifier and a note
       if (/^\s*1d20/i.test(formula)) {
@@ -610,7 +1088,7 @@ class BESMActorSheet extends ActorSheet {
         .replace(/--/g, '+')
         .replace(/\+$|^-\+/, '');
 
-      const roll = new Roll(formula, this.actor.getRollData());
+    const roll = new Roll(formula, this.actor.getRollData());
       // Foundry V13+: evaluate() is async by default; the {async} option is removed
       await roll.evaluate();
       roll.toMessage({
@@ -664,11 +1142,7 @@ class BESMActorSheet extends ActorSheet {
     });
   }
 
-  /** @override */
-  async _updateObject(event, formData) {
-    // Let the parent class handle the update
-    return super._updateObject(event, formData);
-  }
+  // Note: _updateObject override is defined earlier to filter blank specializations.
 }
 
 /* -------------------------------------------- */
@@ -750,4 +1224,3 @@ Hooks.on("createActor", async (actor) => {
     "prototypeToken.bar2.attribute": "energy"
   });
 });
-

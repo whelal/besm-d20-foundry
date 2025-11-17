@@ -465,7 +465,7 @@
           {{!-- Drive rendering from configured skill list for consistency and to avoid blanks --}}
           {{#each config.skills as |label key|}}
           {{#with (lookup ../system.skills key) as |skill|}}
-          <tr class="skill-row" data-skill="{{../key}}">
+          <tr class="skill-row" data-skill="{{key}}">
             <td>
               <div class="skill-name-cell">
                 <a class="skill-spec-toggle" data-skill="{{../key}}" title="Show Specializations"><i class="fas fa-chevron-right"></i></a>
@@ -479,7 +479,7 @@
                   {{#if (gt skill.specializations.length 2)}}
                     <span class="spec-chip more">+{{sub skill.specializations.length 2}} more</span>
                   {{/if}}
-                  <a class="spec-chip spec-chip-add" data-skill="{{../key}}" title="Add specialization"><i class="fas fa-plus"></i></a>
+                  <a class="spec-chip spec-chip-add" data-skill="{{key}}" title="Add specialization"><i class="fas fa-plus"></i></a>
                 </span>
               </div>
             </td>
@@ -497,11 +497,20 @@
             <td>{{signedNumber skill.total}}</td>
             <td class="skill-roll"><a class="rollable" data-roll="1d20+{{skill.total}}" data-label="{{label}} Check"><i class="fas fa-dice-d20"></i></a></td>
           </tr>
-          <tr class="skill-spec-row" data-skill="{{../key}}">
+          <tr class="skill-spec-row" data-skill="{{key}}">
             <td colspan="8">
-              {{#with (lookup ../../system.skills key) as |s|}}
-              {{> "systems/besm-d20/templates/partials/spec-pill.hbs" skill=s sKey=../key label=../../label}}
-              {{/with}}
+              <div class="skill-specs pill-list" data-skill="{{key}}">
+                {{#each skill.specializations as |spec i|}}
+                <div class="spec-pill">
+                  <input type="text" class="spec-name" name="{{specPath key i 'name'}}" value="{{spec.name}}" placeholder="Specialization"/>
+                  <span class="plus">+</span>
+                  <input type="number" class="spec-bonus" name="{{specPath key i 'bonus'}}" value="{{numberValue spec.bonus}}" data-dtype="Number"/>
+                  <a class="rollable spec-roll" title="Roll {{label}} ({{spec.name}})" data-skill="{{key}}" data-index="{{i}}" data-label="{{label}} ({{spec.name}}) Check"><i class="fas fa-dice-d20"></i></a>
+                  <a class="pill-remove" data-skill="{{key}}" data-index="{{i}}" title="Delete"><i class="fas fa-times"></i></a>
+                </div>
+                {{/each}}
+                <a class="pill-add" data-skill="{{key}}"><i class="fas fa-plus-circle"></i> Add</a>
+              </div>
             </td>
           </tr>
           {{/with}}

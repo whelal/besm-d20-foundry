@@ -1,10 +1,10 @@
-<div class="skill-specs pill-list">
+<div class="skill-specs pill-list" data-skill="{{sKey}}">
   {{#each skill.specializations as |spec i|}}
   <div class="spec-pill">
-    <input type="text" class="spec-name" name="system.skills.{{sKey}}.specializations.{{i}}.name" value="{{spec.name}}" placeholder="Specialization"/>
+    <input type="text" class="spec-name" name="{{specPath sKey i 'name'}}" value="{{spec.name}}" placeholder="Specialization"/>
     <span class="plus">+</span>
-    <input type="number" class="spec-bonus" name="system.skills.{{sKey}}.specializations.{{i}}.bonus" value="{{numberValue spec.bonus}}" data-dtype="Number"/>
-    <a class="rollable" title="Roll {{label}} ({{spec.name}})" data-roll="1d20+{{skill.total}}+{{numberValue spec.bonus}}" data-label="{{label}} ({{spec.name}}) Check"><i class="fas fa-dice-d20"></i></a>
+    <input type="number" class="spec-bonus" name="{{specPath sKey i 'bonus'}}" value="{{numberValue spec.bonus}}" data-dtype="Number"/>
+  <a class="rollable spec-roll" title="Roll {{label}} ({{spec.name}})" data-skill="{{sKey}}" data-index="{{i}}" data-label="{{label}} ({{spec.name}}) Check" data-skillkey="{{sKey}}"><i class="fas fa-dice-d20"></i></a>
     <a class="pill-remove" data-skill="{{sKey}}" data-index="{{i}}" title="Delete"><i class="fas fa-times"></i></a>
   </div>
   {{/each}}

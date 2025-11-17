@@ -103,6 +103,14 @@ export class BESMActor extends Actor {
     if (systemData.skills.hasOwnProperty('undefined')) {
       delete systemData.skills.undefined;
     }
+    // Also clean up empty-string key that can be created by malformed input names
+    if (systemData.skills.hasOwnProperty('')) {
+      delete systemData.skills[''];
+    }
+    // And any helper-generated invalid bucket
+    if (systemData.skills.hasOwnProperty('__invalid__')) {
+      delete systemData.skills['__invalid__'];
+    }
     const defaultAbilities = {
       balance: "dex", bluff: "cha", climb: "str", concentration: "con",
       computerUse: "int", craft: "int", decipherScript: "int", diplomacy: "cha",
