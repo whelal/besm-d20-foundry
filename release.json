@@ -1,13 +1,13 @@
 {
   "id": "besm-d20",
   "title": "BESM d20 System",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "compatibility": {
     "minimum": "13",
     "verified": "13.330",
     "maximum": "13"
   },
-  "notes": "https://github.com/whelal/besm-d20-foundry/releases/tag/0.0.1",
-  "manifest": "https://raw.githubusercontent.com/whelal/besm-d20-foundry/0.0.1/system.json",
-  "download": "https://github.com/whelal/besm-d20-foundry/archive/refs/tags/0.0.1.zip"
+  "notes": "https://github.com/whelal/besm-d20-foundry/releases/tag/v0.0.2",
+  "manifest": "https://raw.githubusercontent.com/whelal/besm-d20-foundry/main/system.json",
+  "download": "https://github.com/whelal/besm-d20-foundry/archive/refs/tags/v0.0.2.zip"
 }
