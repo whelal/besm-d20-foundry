@@ -2,7 +2,7 @@
   "id": "besm-d20",
   "title": "BESM d20 System",
   "description": "A comprehensive system for playing Big Eyes Small Mouth d20 in Foundry VTT. Features character sheets, power/attribute/defect management, and BESM-specific mechanics.",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "compatibility": {
     "minimum": "13",
     "verified": "13.330"
